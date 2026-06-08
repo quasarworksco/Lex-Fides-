@@ -254,11 +254,41 @@
     .stats-grid, .stats-grid-6 { grid-template-columns: repeat(2,1fr); }
     .grid-3, .grid-3-1, .grid-2 { grid-template-columns: 1fr; }
   }
-  @media (max-width: 560px)  {
-    header { padding: 0 16px; }
-    .nav-tabs { padding: 0 12px; overflow-x: auto; }
-    main { padding: 16px 12px 32px; }
-    .stats-grid { grid-template-columns: repeat(2,1fr); gap: 10px; }
+  @media (max-width: 640px) {
+    header { padding: 0 14px; flex-wrap: wrap; gap: 8px; height: auto; min-height: 60px; padding-top: 10px; padding-bottom: 10px; }
+    .header-sub { display: none; }
+    .nav-tabs { padding: 0 10px; gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab { white-space: nowrap; font-size: 12px; padding: 10px 12px; }
+    main { padding: 14px 10px 40px; }
+    .stats-grid, .stats-grid-6 { grid-template-columns: repeat(2,1fr); gap: 10px; }
+    .grid-3, .grid-3-1, .grid-2, .grid-full { grid-template-columns: 1fr; }
+    .card { padding: 14px; }
+    .section-title { font-size: 13px; }
+    .stat-value { font-size: 26px; }
+
+    /* Tablas → cards verticales en mobile */
+    .data-table thead { display: none; }
+    .data-table, .data-table tbody, .data-table tr, .data-table td { display: block; width: 100%; }
+    .data-table tr {
+      background: var(--surface-alt); border-radius: 12px;
+      margin-bottom: 10px; padding: 12px 14px;
+      border: 1px solid var(--border); position: relative;
+    }
+    .data-table td {
+      padding: 4px 0; font-size: 12.5px;
+      border: none; text-align: left;
+    }
+    .data-table td::before {
+      content: attr(data-label);
+      font-size: 10px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      display: block; margin-bottom: 1px;
+    }
+    .data-table td select { width: 100%; }
+
+    /* Ocultar columnas menos importantes en mobile */
+    .hide-mobile { display: none !important; }
   }
 </style>
 </head>
@@ -959,11 +989,11 @@ function renderActivityTable(msgs) {
   if (!msgs.length) { el.innerHTML = '<tr><td colspan="5" class="empty-state">Sin mensajes</td></tr>'; return; }
   el.innerHTML = msgs.map(m => `
     <tr>
-      <td><span class="badge profesional">${esc(AREA_LABELS[m.area]||m.area||'general')}</span></td>
-      <td><div class="truncate">${esc(m.userMessage||'')}</div></td>
-      <td class="ts-cell">${m.durationMs ? (m.durationMs/1000).toFixed(1)+'s' : '—'}</td>
-      <td><span class="badge basico">${esc(m.plan||'free')}</span></td>
-      <td class="ts-cell">${fmtTs(m.createdAt)}</td>
+      <td data-label="Area"><span class="badge profesional">${esc(AREA_LABELS[m.area]||m.area||'general')}</span></td>
+      <td data-label="Consulta"><div class="truncate">${esc(m.userMessage||'')}</div></td>
+      <td data-label="Tiempo" class="ts-cell">${m.durationMs ? (m.durationMs/1000).toFixed(1)+'s' : '—'}</td>
+      <td data-label="Plan"><span class="badge basico">${esc(m.plan||'free')}</span></td>
+      <td data-label="Fecha" class="ts-cell">${fmtTs(m.createdAt)}</td>
     </tr>`).join('');
 }
 
@@ -975,11 +1005,11 @@ function renderUsersTable(users) {
     const planBadge = u.plan === 'empresarial' ? 'empresarial' : u.plan === 'profesional' ? 'profesional' : 'basico';
     const isActive = u.active !== false;
     return `<tr>
-      <td>
+      <td data-label="Usuario">
         <div style="font-size:12.5px;font-weight:500">${esc(u.nombre||'Sin nombre')}</div>
         <div class="ts-cell">${esc(u.email||u.id)}</div>
       </td>
-      <td>
+      <td data-label="Plan">
         <select onchange="cambiarPlan('${u.id}', this.value)" style="font-size:12px;padding:4px 8px;border-radius:8px;border:1.5px solid var(--border-strong);background:var(--surface-alt);font-family:'Inter',sans-serif;cursor:pointer">
           <option value="free"         ${u.plan==='free'?'selected':''}>Free</option>
           <option value="basico"       ${u.plan==='basico'?'selected':''}>Basico — Bs 49</option>
@@ -987,7 +1017,7 @@ function renderUsersTable(users) {
           <option value="empresarial"  ${u.plan==='empresarial'?'selected':''}>Empresarial — Bs 399</option>
         </select>
       </td>
-      <td>
+      <td data-label="Estado">
         <button onclick="toggleActivo('${u.id}', ${isActive})"
           style="font-size:11px;font-weight:700;padding:4px 12px;border-radius:8px;border:none;cursor:pointer;
           background:${isActive?'rgba(22,163,74,0.12)':'rgba(220,38,38,0.10)'};
@@ -995,10 +1025,10 @@ function renderUsersTable(users) {
           ${isActive ? 'Activo' : 'Inactivo'}
         </button>
       </td>
-      <td>${(u.messagesUsed||u.messageCount||0).toLocaleString('es-BO')} / ${planLimitLabel(u.plan)}</td>
-      <td>${(u.sessionCount||0)}</td>
-      <td class="ts-cell">${fmtTs(u.lastActivity)}</td>
-      <td class="ts-cell">${fmtTs(u.createdAt)}</td>
+      <td data-label="Mensajes">${(u.messagesUsed||u.messageCount||0).toLocaleString('es-BO')} / ${planLimitLabel(u.plan)}</td>
+      <td data-label="Sesiones">${(u.sessionCount||0)}</td>
+      <td data-label="Ultima actividad" class="ts-cell">${fmtTs(u.lastActivity)}</td>
+      <td data-label="Registro" class="ts-cell">${fmtTs(u.createdAt)}</td>
     </tr>`;
   }).join('');
 }
@@ -1077,12 +1107,12 @@ function renderRequestsTable(reqs) {
       <button onclick="rejectRequest('${r.id}')" style="padding:5px 12px;border-radius:8px;border:none;background:var(--red);color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;margin-left:4px">Rechazar</button>
     ` : `<span style="font-size:11px;color:var(--text-muted)">${r.estado}</span>`;
     return `<tr>
-      <td class="ts-cell">${esc(r.email || r.userId)}</td>
-      <td>${esc(r.planActual || 'free')}</td>
-      <td><span class="badge ${r.planSolicitado||'basico'}">${esc(r.planSolicitado||'—')}</span></td>
-      <td>Bs ${(r.precioMonto||0).toLocaleString('es-BO')}</td>
-      <td><span style="font-weight:600;color:${estadoColor}">${esc(r.estado||'—')}</span></td>
-      <td>${actions}</td>
+      <td data-label="Email" class="ts-cell">${esc(r.email || r.userId)}</td>
+      <td data-label="Plan actual">${esc(r.planActual || 'free')}</td>
+      <td data-label="Plan solicitado"><span class="badge ${r.planSolicitado||'basico'}">${esc(r.planSolicitado||'—')}</span></td>
+      <td data-label="Monto">Bs ${(r.precioMonto||0).toLocaleString('es-BO')}</td>
+      <td data-label="Estado"><span style="font-weight:600;color:${estadoColor}">${esc(r.estado||'—')}</span></td>
+      <td data-label="Acciones">${actions}</td>
     </tr>`;
   }).join('');
 }
@@ -1103,6 +1133,12 @@ async function rejectRequest(reqId) {
     showToast('Solicitud rechazada');
   } catch(e) { showToast('Error: ' + e.message, true); }
 }
+
+// Exponer al scope global para onclick en HTML dinamico
+window.approveRequest = approveRequest;
+window.rejectRequest  = rejectRequest;
+window.cambiarPlan    = cambiarPlan;
+window.toggleActivo   = toggleActivo;
 
 function renderPlanBars(containerId, basico, pro, emp) {
   const el = document.getElementById(containerId);
