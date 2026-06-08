@@ -711,10 +711,9 @@ onSnapshot(doc(db,'stats_global','totals'), snap => {
   const sessions = d.totalSessions || 0;
 
   setText('ov-total-msgs', msgs.toLocaleString('es-BO'));
-  setText('ov-total-users', sessions.toLocaleString('es-BO'));
   setText('a-sessions-activas', sessions.toLocaleString('es-BO'));
-  setText('u-total', sessions.toLocaleString('es-BO'));
   setText('last-update-ov', 'Ultima actualizacion: ' + new Date().toLocaleTimeString('es-BO'));
+  // ov-total-users y u-total se actualizan desde el snapshot real de users
 });
 
 // ════════════════════════════════════════════════════
@@ -798,6 +797,10 @@ onSnapshot(usersQ, snap => {
   snap.forEach(d => users.push({ id: d.id, ...d.data() }));
 
   renderUsersTable(users);
+
+  // Conteo real de usuarios registrados
+  setText('ov-total-users', users.length.toLocaleString('es-BO'));
+  setText('u-total', users.length.toLocaleString('es-BO'));
 
   const today = todayKey();
   const thisMonth = today.slice(0,7);

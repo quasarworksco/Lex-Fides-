@@ -316,20 +316,25 @@ app.post('/api/user', async (req, res) => {
   const { userId, email, plan } = req.body;
   if (!userId) return res.status(400).json({ error: 'userId requerido' });
   try {
-    await db.collection('users').doc(userId).set({
+    const userRef = db.collection('users').doc(userId);
+    const existing = await userRef.get();
+    const isNew = !existing.exists;
+
+    await userRef.set({
       email: email || null,
       plan: plan || 'free',
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      messageCount: 0,
-      sessionCount: 0,
+      ...(isNew ? { createdAt: admin.firestore.FieldValue.serverTimestamp(), messageCount: 0, sessionCount: 0 } : {}),
       active: true
     }, { merge: true });
 
-    await db.collection('stats_global').doc('totals').set({
-      totalUsers: admin.firestore.FieldValue.increment(1)
-    }, { merge: true });
+    // Solo incrementar totalUsers si es un usuario nuevo
+    if (isNew) {
+      await db.collection('stats_global').doc('totals').set({
+        totalUsers: admin.firestore.FieldValue.increment(1)
+      }, { merge: true });
+    }
 
-    res.json({ success: true });
+    res.json({ success: true, isNew });
   } catch(e) {
     res.status(500).json({ error: e.message });
   }
