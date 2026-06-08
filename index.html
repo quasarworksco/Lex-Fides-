@@ -2766,9 +2766,12 @@ async function submitPlanRequest() {
   }
 }
 
-// Toggle Chat / Biblioteca (wired here to avoid module scope issues)
-document.getElementById('vt-chat').addEventListener('click', () => switchView('chat'));
-document.getElementById('vt-lib').addEventListener('click',  () => switchView('lib'));
+// Toggle Chat / Biblioteca
+document.addEventListener('click', e => {
+  const btn = e.target.closest('#vt-chat, #vt-lib');
+  if (!btn) return;
+  switchView(btn.id === 'vt-lib' ? 'lib' : 'chat');
+});
 
 // Expose module-scoped functions to global scope for HTML onclick attributes
 window.authSubmit = authSubmit;
