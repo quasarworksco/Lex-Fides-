@@ -191,6 +191,128 @@
   .user-dropdown-item svg { width: 15px; height: 15px; fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-linecap: round; }
   .user-dropdown-item.danger { color: #DC2626; }
   .user-dropdown-item.danger svg { stroke: #DC2626; }
+  .user-dropdown-item.upgrade { color: var(--gold); font-weight: 600; }
+  .user-dropdown-item.upgrade svg { stroke: var(--gold); }
+
+  /* ── MODAL PLANES ── */
+  #plans-modal {
+    display: none; position: fixed; inset: 0; z-index: 1200;
+    background: rgba(10,31,60,0.65); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  #plans-modal.open { display: flex; }
+  .plans-box {
+    background: var(--surface); border-radius: 22px;
+    width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+    animation: msgIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .plans-header {
+    background: var(--navy); border-radius: 22px 22px 0 0;
+    padding: 22px 26px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .plans-header h2 { font-family: 'Libre Baskerville',serif; font-size: 18px; color: #fff; }
+  .plans-header p { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; }
+  .plans-close {
+    background: rgba(255,255,255,0.1); border: none; border-radius: 8px;
+    width: 32px; height: 32px; cursor: pointer; color: #fff; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .plans-close:hover { background: rgba(255,255,255,0.2); }
+  .plans-body { padding: 22px 24px; }
+  .plans-current {
+    background: var(--surface-alt); border-radius: 12px;
+    padding: 12px 16px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+    border: 1.5px solid var(--border);
+  }
+  .plans-current-label { font-size: 12px; color: var(--text-muted); }
+  .plans-current-plan { font-size: 13px; font-weight: 700; color: var(--navy); text-transform: uppercase; }
+  .plans-current-msgs { font-size: 11.5px; color: var(--text-muted); margin-left: auto; }
+
+  .plan-card {
+    border: 2px solid var(--border); border-radius: 16px;
+    padding: 18px 20px; margin-bottom: 12px; cursor: pointer;
+    transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .plan-card:hover { border-color: var(--navy-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,31,60,0.1); }
+  .plan-card.selected { border-color: var(--navy); background: rgba(10,31,60,0.03); }
+  .plan-card.popular { border-color: var(--gold); }
+  .plan-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .plan-card-name { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .plan-card-price { font-size: 22px; font-weight: 800; color: var(--navy); }
+  .plan-card-price span { font-size: 12px; font-weight: 400; color: var(--text-muted); }
+  .plan-badge {
+    position: absolute; top: 12px; right: 56px;
+    background: var(--gold); color: var(--navy);
+    font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 20px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .plan-card-feats { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .plan-card-feats li {
+    font-size: 11px; color: var(--text-muted);
+    background: var(--surface-alt); border-radius: 20px; padding: 3px 10px;
+    border: 1px solid var(--border);
+  }
+  .plan-select-radio {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 2px solid var(--border-strong); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .plan-card.selected .plan-select-radio { border-color: var(--navy); background: var(--navy); }
+  .plan-select-radio::after {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: #fff; display: none;
+  }
+  .plan-card.selected .plan-select-radio::after { display: block; }
+
+  .payment-methods { margin-top: 20px; }
+  .payment-methods h3 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+  .pay-method {
+    border: 2px solid var(--border); border-radius: 12px; padding: 14px 16px;
+    margin-bottom: 10px; cursor: pointer; transition: border-color 0.15s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .pay-method.active { border-color: var(--navy); }
+  .pay-method.soon { opacity: 0.5; cursor: not-allowed; }
+  .pay-method-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .pay-method-info { flex: 1; }
+  .pay-method-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .pay-method-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .pay-soon-tag { font-size: 9px; font-weight: 700; background: var(--border); color: var(--text-muted); padding: 2px 7px; border-radius: 20px; text-transform: uppercase; }
+
+  .pay-manual-details {
+    background: var(--surface-alt); border-radius: 12px;
+    padding: 16px; margin-top: 12px; border: 1.5px solid var(--border);
+    display: none;
+  }
+  .pay-manual-details.show { display: block; }
+  .pay-manual-details h4 { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .pay-detail-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12.5px; }
+  .pay-detail-row:last-child { border-bottom: none; }
+  .pay-detail-row span:first-child { color: var(--text-muted); }
+  .pay-detail-row strong { color: var(--text); font-weight: 600; }
+  .pay-qr { text-align: center; margin-top: 12px; }
+  .pay-qr-box {
+    width: 120px; height: 120px; margin: 0 auto 8px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.4); font-size: 11px; text-align: center; padding: 10px;
+  }
+  .pay-qr p { font-size: 11px; color: var(--text-muted); }
+
+  .pay-confirm-btn {
+    width: 100%; padding: 13px; border-radius: 12px; border: none;
+    background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+    color: #fff; font-size: 14px; font-weight: 600;
+    font-family: 'Inter', sans-serif; cursor: pointer; margin-top: 16px;
+    transition: all 0.2s; box-shadow: 0 4px 14px rgba(10,31,60,0.2);
+  }
+  .pay-confirm-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,31,60,0.28); }
+  .pay-confirm-btn:disabled { background: #C5CDD8; cursor: not-allowed; transform: none; box-shadow: none; }
+  .pay-note { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px; line-height: 1.6; }
 
   body {
     font-family: 'Inter', sans-serif;
@@ -1090,10 +1212,138 @@
     <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
     <span id="dropdown-plan">Plan Free</span>
   </button>
+  <button class="user-dropdown-item upgrade" onclick="openPlansModal(); closeUserMenu();">
+    <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    Mejorar plan
+  </button>
   <button class="user-dropdown-item danger" onclick="signOut()">
     <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
     Cerrar sesion
   </button>
+</div>
+
+<!-- Modal de Planes -->
+<div id="plans-modal">
+  <div class="plans-box">
+    <div class="plans-header">
+      <div>
+        <h2>Elige tu plan</h2>
+        <p>Accede a todas las areas juridicas bolivianas</p>
+      </div>
+      <button class="plans-close" onclick="closePlansModal()">&#x2715;</button>
+    </div>
+    <div class="plans-body">
+      <div class="plans-current">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;stroke:var(--gold);stroke-width:2;flex-shrink:0"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        <div>
+          <div class="plans-current-label">Tu plan actual</div>
+          <div class="plans-current-plan" id="pm-current-plan">Free</div>
+        </div>
+        <div class="plans-current-msgs" id="pm-current-msgs">0 / 10 mensajes</div>
+      </div>
+
+      <div class="plan-card" data-plan="basico" onclick="selectPlanCard(this)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="plan-select-radio"></div>
+          <div style="flex:1">
+            <div class="plan-card-top">
+              <span class="plan-card-name">Basico</span>
+              <span class="plan-card-price">Bs 49<span>/mes</span></span>
+            </div>
+            <ul class="plan-card-feats">
+              <li>50 mensajes/mes</li>
+              <li>General · Laboral · Civil</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="plan-card popular" data-plan="profesional" onclick="selectPlanCard(this)">
+        <div class="plan-badge">Popular</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="plan-select-radio"></div>
+          <div style="flex:1">
+            <div class="plan-card-top">
+              <span class="plan-card-name">Profesional</span>
+              <span class="plan-card-price">Bs 149<span>/mes</span></span>
+            </div>
+            <ul class="plan-card-feats">
+              <li>300 mensajes/mes</li>
+              <li>Todas las areas juridicas</li>
+              <li>Historial completo</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="plan-card" data-plan="empresarial" onclick="selectPlanCard(this)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="plan-select-radio"></div>
+          <div style="flex:1">
+            <div class="plan-card-top">
+              <span class="plan-card-name">Empresarial</span>
+              <span class="plan-card-price">Bs 399<span>/mes</span></span>
+            </div>
+            <ul class="plan-card-feats">
+              <li>Mensajes ilimitados</li>
+              <li>Todas las areas juridicas</li>
+              <li>Soporte prioritario</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-methods">
+        <h3>Metodo de pago</h3>
+        <div class="pay-method active" id="pay-manual-btn" onclick="selectPayMethod('manual')">
+          <div class="pay-method-icon" style="background:rgba(10,31,60,0.08)">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:var(--navy);stroke-width:2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="pay-method-info">
+            <div class="pay-method-name">Transferencia / QR</div>
+            <div class="pay-method-desc">Paga por banco o QR y notificanos</div>
+          </div>
+        </div>
+        <div class="pay-method soon" onclick="return false">
+          <div class="pay-method-icon" style="background:#f0f4ff">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:#635bff;stroke-width:2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="pay-method-info">
+            <div class="pay-method-name">Stripe</div>
+            <div class="pay-method-desc">Pago con tarjeta de credito/debito</div>
+          </div>
+          <div class="pay-soon-tag">Proximamente</div>
+        </div>
+        <div class="pay-method soon" onclick="return false">
+          <div class="pay-method-icon" style="background:#fff8e1">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:none;stroke:#f0a500;stroke-width:2"><path d="M7 11l5-5 5 5M12 6v12"/></svg>
+          </div>
+          <div class="pay-method-info">
+            <div class="pay-method-name">PayPal</div>
+            <div class="pay-method-desc">Pago seguro con cuenta PayPal</div>
+          </div>
+          <div class="pay-soon-tag">Proximamente</div>
+        </div>
+
+        <div class="pay-manual-details show" id="pay-manual-details">
+          <h4>Datos de pago</h4>
+          <div class="pay-detail-row"><span>Banco</span><strong>Banco Union S.A.</strong></div>
+          <div class="pay-detail-row"><span>Titular</span><strong>LexBolivia S.R.L.</strong></div>
+          <div class="pay-detail-row"><span>Cuenta</span><strong>1-6123456-01</strong></div>
+          <div class="pay-detail-row"><span>Monto</span><strong id="pm-monto">Bs 0</strong></div>
+          <div class="pay-qr">
+            <div class="pay-qr-box">QR disponible proxImamente</div>
+            <p>Escanea con tu app bancaria o transfiere manualmente</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="pay-confirm-btn" id="pay-confirm-btn" onclick="submitPlanRequest()" disabled>
+        Ya realize el pago — Solicitar activacion
+      </button>
+      <p class="pay-note">Tu solicitud sera revisada y el plan activado en un plazo maximo de 24 horas habil. Recibiras confirmacion por correo.</p>
+    </div>
+  </div>
 </div>
 
 <div id="overlay" onclick="closePanel(); closeHistoryPanel(); closeUserMenu();"></div>
@@ -2448,6 +2698,74 @@ function consultarEnChat(tema, norma) {
   inputEl.focus();
 }
 
+// ══════════════════════════════════════════════════════
+//  MODAL DE PLANES
+// ══════════════════════════════════════════════════════
+const PLAN_PRICES_MODAL = { basico: 49, profesional: 149, empresarial: 399 };
+const PLAN_NAMES_MODAL  = { basico: 'Basico', profesional: 'Profesional', empresarial: 'Empresarial' };
+let selectedPlanModal = null;
+
+function openPlansModal() {
+  const modal = document.getElementById('plans-modal');
+  modal.classList.add('open');
+  // Actualizar plan actual
+  if (userPlanData) {
+    document.getElementById('pm-current-plan').textContent = PLAN_NAMES_MODAL[userPlanData.plan] || userPlanData.plan.charAt(0).toUpperCase() + userPlanData.plan.slice(1);
+    const lim = userPlanData.limit === Infinity ? '∞' : userPlanData.limit;
+    document.getElementById('pm-current-msgs').textContent = `${userPlanData.messagesUsed} / ${lim} mensajes`;
+  }
+  selectedPlanModal = null;
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('pay-confirm-btn').disabled = true;
+  document.getElementById('pm-monto').textContent = 'Bs 0';
+}
+
+function closePlansModal() {
+  document.getElementById('plans-modal').classList.remove('open');
+}
+
+function selectPlanCard(card) {
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  selectedPlanModal = card.dataset.plan;
+  const price = PLAN_PRICES_MODAL[selectedPlanModal] || 0;
+  document.getElementById('pm-monto').textContent = 'Bs ' + price;
+  document.getElementById('pay-confirm-btn').disabled = false;
+}
+
+function selectPayMethod(method) {
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('active'));
+  document.getElementById('pay-manual-btn').classList.toggle('active', method === 'manual');
+  document.getElementById('pay-manual-details').classList.toggle('show', method === 'manual');
+}
+
+async function submitPlanRequest() {
+  if (!selectedPlanModal || !currentUser) return;
+  const btn = document.getElementById('pay-confirm-btn');
+  btn.disabled = true;
+  btn.textContent = 'Enviando solicitud...';
+  try {
+    await addDoc(collection(db, 'plan_requests'), {
+      userId: currentUser.uid,
+      email: currentUser.email,
+      displayName: currentUser.displayName || '',
+      planSolicitado: selectedPlanModal,
+      precioMonto: PLAN_PRICES_MODAL[selectedPlanModal],
+      planActual: userPlanData?.plan || 'free',
+      estado: 'pendiente',
+      createdAt: serverTimestamp()
+    });
+    btn.textContent = 'Solicitud enviada correctamente';
+    btn.style.background = 'linear-gradient(135deg,#16a34a,#22c55e)';
+    setTimeout(() => closePlansModal(), 2500);
+  } catch(e) {
+    console.error(e);
+    btn.disabled = false;
+    btn.textContent = 'Error al enviar, intenta de nuevo';
+    setTimeout(() => { btn.textContent = 'Ya realize el pago — Solicitar activacion'; }, 3000);
+  }
+}
+
 // Toggle Chat / Biblioteca (wired here to avoid module scope issues)
 document.getElementById('vt-chat').addEventListener('click', () => switchView('chat'));
 document.getElementById('vt-lib').addEventListener('click',  () => switchView('lib'));
@@ -2473,6 +2791,11 @@ window.consultarEnChat = consultarEnChat;
 window.toggleUserMenu = toggleUserMenu;
 window.closeUserMenu = closeUserMenu;
 window.signOut = signOut;
+window.openPlansModal = openPlansModal;
+window.closePlansModal = closePlansModal;
+window.selectPlanCard = selectPlanCard;
+window.selectPayMethod = selectPayMethod;
+window.submitPlanRequest = submitPlanRequest;
 </script>
 </body>
 </html>

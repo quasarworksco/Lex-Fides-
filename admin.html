@@ -283,7 +283,7 @@
 <nav class="nav-tabs">
   <div class="nav-tab active" onclick="showPage('overview')">Vision General</div>
   <div class="nav-tab" onclick="showPage('users')">Usuarios</div>
-  <div class="nav-tab" onclick="showPage('subs')">Suscripciones</div>
+  <div class="nav-tab" onclick="showPage('subs')">Suscripciones <span id="nav-req-badge" style="display:inline-block;background:#f59e0b;color:#fff;border-radius:20px;font-size:9px;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></div>
   <div class="nav-tab" onclick="showPage('activity')">Actividad</div>
   <div class="nav-tab" onclick="showPage('performance')">Rendimiento</div>
 </nav>
@@ -491,6 +491,30 @@
     </div>
   </div>
 
+  <!-- Solicitudes de pago pendientes -->
+  <div class="grid-full card" style="border:2px solid var(--amber)">
+    <div class="section-title" style="color:var(--amber)">
+      Solicitudes de activacion de plan
+      <span class="pill" id="req-badge" style="background:var(--amber);color:#fff;min-width:20px;text-align:center"></span>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px">Usuarios que reportaron haber realizado el pago y esperan activacion manual.</p>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Plan actual</th>
+            <th>Plan solicitado</th>
+            <th>Monto</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="requests-table"><tr><td colspan="6" class="empty-state">Sin solicitudes aun</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="grid-full card">
     <div class="section-title">Suscriptores activos <span class="pill">Ultimos 50</span></div>
     <div style="overflow-x:auto">
@@ -636,7 +660,7 @@
 import { initializeApp }    from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js';
 import {
   getFirestore, collection, query, orderBy, limit,
-  onSnapshot, doc, where, getDocs, Timestamp, setDoc
+  onSnapshot, doc, where, getDocs, Timestamp, setDoc, updateDoc, deleteDoc
 } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -860,6 +884,22 @@ onSnapshot(subsQ, snap => {
 });
 
 // ════════════════════════════════════════════════════
+//  SNAPSHOT: plan_requests (solicitudes de pago pendientes)
+// ════════════════════════════════════════════════════
+const reqQ = query(collection(db,'plan_requests'), orderBy('createdAt','desc'), limit(50));
+onSnapshot(reqQ, snap => {
+  const reqs = [];
+  snap.forEach(d => reqs.push({ id: d.id, ...d.data() }));
+  const pending = reqs.filter(r => r.estado === 'pendiente');
+  // Badge en tab Suscripciones
+  const badge = document.getElementById('req-badge');
+  if (badge) badge.textContent = pending.length || '';
+  const navBadge = document.getElementById('nav-req-badge');
+  if (navBadge) navBadge.textContent = pending.length || '';
+  renderRequestsTable(reqs);
+});
+
+// ════════════════════════════════════════════════════
 //  RENDERERS
 // ════════════════════════════════════════════════════
 function setText(id, val) {
@@ -1024,6 +1064,44 @@ function renderSubsTable(subs) {
       <td class="ts-cell">${fmtTs(s.renewalDate)}</td>
     </tr>`;
   }).join('');
+}
+
+function renderRequestsTable(reqs) {
+  const el = document.getElementById('requests-table');
+  if (!el) return;
+  if (!reqs.length) { el.innerHTML = '<tr><td colspan="6" class="empty-state">Sin solicitudes aun</td></tr>'; return; }
+  el.innerHTML = reqs.map(r => {
+    const estadoColor = r.estado === 'pendiente' ? 'var(--amber)' : r.estado === 'aprobado' ? 'var(--green)' : 'var(--red)';
+    const actions = r.estado === 'pendiente' ? `
+      <button onclick="approveRequest('${r.id}','${r.userId}','${r.planSolicitado}')" style="padding:5px 12px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">Aprobar</button>
+      <button onclick="rejectRequest('${r.id}')" style="padding:5px 12px;border-radius:8px;border:none;background:var(--red);color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;margin-left:4px">Rechazar</button>
+    ` : `<span style="font-size:11px;color:var(--text-muted)">${r.estado}</span>`;
+    return `<tr>
+      <td class="ts-cell">${esc(r.email || r.userId)}</td>
+      <td>${esc(r.planActual || 'free')}</td>
+      <td><span class="badge ${r.planSolicitado||'basico'}">${esc(r.planSolicitado||'—')}</span></td>
+      <td>Bs ${(r.precioMonto||0).toLocaleString('es-BO')}</td>
+      <td><span style="font-weight:600;color:${estadoColor}">${esc(r.estado||'—')}</span></td>
+      <td>${actions}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function approveRequest(reqId, userId, plan) {
+  if (!confirm(`Activar plan "${plan}" para este usuario?`)) return;
+  try {
+    await setDoc(doc(db,'users',userId), { plan }, { merge: true });
+    await updateDoc(doc(db,'plan_requests',reqId), { estado: 'aprobado', approvedAt: Timestamp.now() });
+    showToast('Plan activado correctamente');
+  } catch(e) { showToast('Error: ' + e.message, true); }
+}
+
+async function rejectRequest(reqId) {
+  if (!confirm('Rechazar esta solicitud?')) return;
+  try {
+    await updateDoc(doc(db,'plan_requests',reqId), { estado: 'rechazado', rejectedAt: Timestamp.now() });
+    showToast('Solicitud rechazada');
+  } catch(e) { showToast('Error: ' + e.message, true); }
 }
 
 function renderPlanBars(containerId, basico, pro, emp) {
