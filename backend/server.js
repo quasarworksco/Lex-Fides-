@@ -10,12 +10,12 @@ app.use(cors());
 app.use(express.json());
 
 // ── Firebase Admin Init ──
+const serviceAccount = require('./serviceAccount.json');
 let db;
 try {
-  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    projectId: process.env.FIREBASE_PROJECT_ID
+    projectId: serviceAccount.project_id
   });
   db = admin.firestore();
   console.log('Firebase conectado');
