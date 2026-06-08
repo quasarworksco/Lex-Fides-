@@ -10,7 +10,12 @@ app.use(cors());
 app.use(express.json());
 
 // ── Firebase Admin Init ──
-const serviceAccount = require('./serviceAccount.json');
+let serviceAccount;
+try {
+  serviceAccount = require('./serviceAccount.json');
+} catch {
+  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+}
 let db;
 try {
   admin.initializeApp({
