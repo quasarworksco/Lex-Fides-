@@ -636,7 +636,7 @@
 import { initializeApp }    from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js';
 import {
   getFirestore, collection, query, orderBy, limit,
-  onSnapshot, doc, where, getDocs, Timestamp
+  onSnapshot, doc, where, getDocs, Timestamp, setDoc
 } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -930,17 +930,69 @@ function renderUsersTable(users) {
   if (!users.length) { el.innerHTML = '<tr><td colspan="7" class="empty-state">Sin usuarios registrados aun</td></tr>'; return; }
   el.innerHTML = users.map(u => {
     const planBadge = u.plan === 'empresarial' ? 'empresarial' : u.plan === 'profesional' ? 'profesional' : 'basico';
-    const statusBadge = u.active === false ? 'inactivo' : u.trial ? 'trial' : 'activo';
+    const isActive = u.active !== false;
     return `<tr>
-      <td class="ts-cell">${esc(u.email || u.id)}</td>
-      <td><span class="badge ${planBadge}">${esc(u.plan||'free')}</span></td>
-      <td><span class="badge ${statusBadge}">${statusBadge}</span></td>
-      <td>${u.messageCount||0}</td>
-      <td>${u.sessionCount||0}</td>
+      <td>
+        <div style="font-size:12.5px;font-weight:500">${esc(u.nombre||'Sin nombre')}</div>
+        <div class="ts-cell">${esc(u.email||u.id)}</div>
+      </td>
+      <td>
+        <select onchange="cambiarPlan('${u.id}', this.value)" style="font-size:12px;padding:4px 8px;border-radius:8px;border:1.5px solid var(--border-strong);background:var(--surface-alt);font-family:'Inter',sans-serif;cursor:pointer">
+          <option value="free"         ${u.plan==='free'?'selected':''}>Free</option>
+          <option value="basico"       ${u.plan==='basico'?'selected':''}>Basico — Bs 49</option>
+          <option value="profesional"  ${u.plan==='profesional'?'selected':''}>Profesional — Bs 149</option>
+          <option value="empresarial"  ${u.plan==='empresarial'?'selected':''}>Empresarial — Bs 399</option>
+        </select>
+      </td>
+      <td>
+        <button onclick="toggleActivo('${u.id}', ${isActive})"
+          style="font-size:11px;font-weight:700;padding:4px 12px;border-radius:8px;border:none;cursor:pointer;
+          background:${isActive?'rgba(22,163,74,0.12)':'rgba(220,38,38,0.10)'};
+          color:${isActive?'#16A34A':'#DC2626'}">
+          ${isActive ? 'Activo' : 'Inactivo'}
+        </button>
+      </td>
+      <td>${(u.messagesUsed||u.messageCount||0).toLocaleString('es-BO')} / ${planLimitLabel(u.plan)}</td>
+      <td>${(u.sessionCount||0)}</td>
       <td class="ts-cell">${fmtTs(u.lastActivity)}</td>
       <td class="ts-cell">${fmtTs(u.createdAt)}</td>
     </tr>`;
   }).join('');
+}
+
+function planLimitLabel(plan) {
+  const l = { free:10, basico:50, profesional:300, empresarial:'∞' };
+  return l[plan] || 10;
+}
+
+async function cambiarPlan(uid, nuevoPlan) {
+  try {
+    await setDoc(doc(db, 'users', uid), { plan: nuevoPlan }, { merge: true });
+    showToast('Plan actualizado a ' + nuevoPlan);
+  } catch(e) { showToast('Error: ' + e.message, true); }
+}
+
+async function toggleActivo(uid, activo) {
+  try {
+    await setDoc(doc(db, 'users', uid), { active: !activo }, { merge: true });
+    showToast(activo ? 'Usuario desactivado' : 'Usuario activado');
+  } catch(e) { showToast('Error: ' + e.message, true); }
+}
+
+function showToast(msg, err) {
+  let t = document.getElementById('admin-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'admin-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:999;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;font-family:Inter,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,0.15);transition:opacity 0.3s';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.background = err ? '#DC2626' : '#16A34A';
+  t.style.color = '#fff';
+  t.style.opacity = '1';
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.style.opacity = '0', 2500);
 }
 
 function renderSubsTable(subs) {

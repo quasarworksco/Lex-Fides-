@@ -148,13 +148,32 @@ async function getUserPlan(userId) {
   return { plan: 'free', messagesUsed: 0 };
 }
 
+// ── Middleware: verificar token Firebase ──
+async function verifyToken(req, res, next) {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  if (!token) return res.status(401).json({ error: 'Token requerido' });
+  try {
+    req.user = await admin.auth().verifyIdToken(token);
+    next();
+  } catch(e) {
+    return res.status(401).json({ error: 'Token invalido' });
+  }
+}
+
 // ── ENDPOINTS ──
 
 // Registrar nueva sesion
-app.post('/api/session', async (req, res) => {
+app.post('/api/session', verifyToken, async (req, res) => {
   try {
     const sessionId = uuidv4();
+    const userId = req.user.uid;
     await registerSession(sessionId);
+    // Actualizar contador de sesiones del usuario
+    await db.collection('users').doc(userId).set({
+      sessionCount: admin.firestore.FieldValue.increment(1),
+      lastActivity: admin.firestore.Timestamp.now()
+    }, { merge: true });
     res.json({ sessionId });
   } catch (e) {
     console.error('session error:', e);
@@ -163,14 +182,15 @@ app.post('/api/session', async (req, res) => {
 });
 
 // Enviar mensaje al asistente
-app.post('/api/chat', async (req, res) => {
-  const { sessionId, userId, area = 'general', message, history = [] } = req.body;
+app.post('/api/chat', verifyToken, async (req, res) => {
+  const userId = req.user.uid;
+  const { sessionId, area = 'general', message, history = [] } = req.body;
 
   if (!sessionId || !message) {
     return res.status(400).json({ error: 'sessionId y message son requeridos' });
   }
 
-  // Verificar plan y limites
+  // Verificar plan y limites desde Firestore (fuente de verdad)
   const userPlan = await getUserPlan(userId);
   const limit = PLAN_LIMITS[userPlan.plan] || PLAN_LIMITS.free;
   if (limit !== Infinity && userPlan.messagesUsed >= limit) {
@@ -227,11 +247,11 @@ app.post('/api/chat', async (req, res) => {
     Promise.all([
       logConversation(sessionId, area, message, reply, durationMs),
       incrementSessionMessages(sessionId),
-      userId ? db.collection('users').doc(userId).set({
+      db.collection('users').doc(userId).set({
+        messagesUsed: admin.firestore.FieldValue.increment(1),
         messageCount: admin.firestore.FieldValue.increment(1),
-        lastActivity: admin.firestore.Timestamp.now(),
-        plan: userPlan.plan
-      }, { merge: true }) : Promise.resolve(),
+        lastActivity: admin.firestore.Timestamp.now()
+      }, { merge: true }),
       userPlan.subId ? db.collection('subscriptions').doc(userPlan.subId).update({
         messagesUsed: admin.firestore.FieldValue.increment(1)
       }) : Promise.resolve()

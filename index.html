@@ -29,6 +29,123 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
 
+  /* ── AUTH SCREEN ── */
+  #auth-screen {
+    position: fixed; inset: 0; z-index: 999;
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 60%, #0F2A55 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  #auth-screen.hidden { display: none; }
+
+  .auth-box {
+    background: var(--surface); border-radius: 24px;
+    padding: 36px 32px; width: 100%; max-width: 400px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+  }
+  .auth-logo {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 28px;
+  }
+  .auth-logo-mark {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(184,134,11,0.4);
+  }
+  .auth-logo-mark svg { width: 22px; height: 22px; fill: var(--navy); }
+  .auth-logo-text { font-family: 'Libre Baskerville', serif; font-size: 20px; font-weight: 700; color: var(--navy); }
+
+  .auth-tabs {
+    display: flex; background: var(--surface-alt);
+    border-radius: 12px; padding: 4px; gap: 4px; margin-bottom: 24px;
+  }
+  .auth-tab {
+    flex: 1; padding: 9px; border-radius: 9px; border: none;
+    font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
+    cursor: pointer; transition: all 0.18s; color: var(--text-muted);
+    background: transparent;
+  }
+  .auth-tab.active { background: var(--surface); color: var(--navy); box-shadow: 0 1px 6px rgba(10,31,60,0.10); }
+
+  .auth-field { margin-bottom: 14px; }
+  .auth-field label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .auth-field input {
+    width: 100%; padding: 11px 14px; border-radius: 10px;
+    border: 1.5px solid var(--border-strong);
+    font-size: 14px; font-family: 'Inter', sans-serif;
+    background: var(--surface-alt); color: var(--text);
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .auth-field input:focus { border-color: var(--navy-light); background: var(--surface); box-shadow: 0 0 0 4px rgba(27,64,128,0.08); }
+
+  .auth-btn {
+    width: 100%; padding: 13px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+    color: #fff; border: none; font-size: 14px; font-weight: 700;
+    font-family: 'Inter', sans-serif; cursor: pointer;
+    transition: all 0.2s; box-shadow: 0 4px 16px rgba(10,31,60,0.22);
+    margin-top: 6px;
+  }
+  .auth-btn:hover { box-shadow: 0 8px 24px rgba(10,31,60,0.30); transform: translateY(-1px); }
+  .auth-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .auth-error {
+    background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.2);
+    color: #DC2626; border-radius: 10px; padding: 10px 14px;
+    font-size: 12.5px; margin-bottom: 14px; display: none;
+  }
+  .auth-error.show { display: block; }
+
+  .auth-note { font-size: 11.5px; color: var(--text-muted); text-align: center; margin-top: 16px; line-height: 1.6; }
+
+  /* ── USAGE BAR ── */
+  #usage-bar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 18px; background: var(--surface-alt);
+    border-bottom: 1px solid var(--border); flex-shrink: 0;
+    font-size: 11.5px;
+  }
+  .usage-plan { font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.05em; font-size: 10px; }
+  .usage-track { flex: 1; height: 4px; background: var(--border-strong); border-radius: 4px; overflow: hidden; }
+  .usage-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--navy-light), var(--gold)); transition: width 0.4s ease; }
+  .usage-fill.warn { background: linear-gradient(90deg, #D97706, #F59E0B); }
+  .usage-fill.full { background: linear-gradient(90deg, #DC2626, #EF4444); }
+  .usage-label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+  .user-menu-btn {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px; padding: 5px 12px 5px 5px;
+    cursor: pointer; transition: background 0.18s; flex-shrink: 0;
+  }
+  .user-menu-btn:hover { background: rgba(255,255,255,0.16); }
+  .user-avatar {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--navy);
+  }
+  .user-email { font-size: 11px; color: rgba(255,255,255,0.75); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .user-dropdown {
+    position: absolute; top: 60px; right: 16px; z-index: 200;
+    background: var(--surface); border-radius: 12px;
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 8px 32px rgba(10,31,60,0.18);
+    min-width: 180px; overflow: hidden; display: none;
+  }
+  .user-dropdown.open { display: block; }
+  .user-dropdown-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 16px; font-size: 13px; color: var(--text);
+    cursor: pointer; transition: background 0.15s; border: none;
+    background: none; width: 100%; text-align: left; font-family: 'Inter', sans-serif;
+  }
+  .user-dropdown-item:hover { background: var(--surface-alt); }
+  .user-dropdown-item svg { width: 15px; height: 15px; fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-linecap: round; }
+  .user-dropdown-item.danger { color: #DC2626; }
+  .user-dropdown-item.danger svg { stroke: #DC2626; }
+
   body {
     font-family: 'Inter', sans-serif;
     background: var(--bg);
@@ -819,7 +936,52 @@
 </head>
 <body>
 
-<div id="overlay" onclick="closePanel(); closeHistoryPanel();"></div>
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="auth-logo-mark"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg></div>
+      <span class="auth-logo-text">LexBolivia</span>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="showAuthTab('login')">Iniciar sesion</button>
+      <button class="auth-tab" id="tab-register" onclick="showAuthTab('register')">Registrarse</button>
+    </div>
+    <div id="auth-error" class="auth-error"></div>
+    <div class="auth-field">
+      <label>Correo electronico</label>
+      <input type="email" id="auth-email" placeholder="tu@correo.com" autocomplete="email">
+    </div>
+    <div class="auth-field">
+      <label>Contrasena</label>
+      <input type="password" id="auth-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <div class="auth-field" id="field-nombre" style="display:none">
+      <label>Nombre completo</label>
+      <input type="text" id="auth-nombre" placeholder="Tu nombre">
+    </div>
+    <button class="auth-btn" id="auth-submit-btn" onclick="authSubmit()">Iniciar sesion</button>
+    <p class="auth-note">Al registrarte accedes al plan gratuito con 10 mensajes.<br>Actualiza tu plan desde los ajustes.</p>
+  </div>
+</div>
+
+<!-- USER DROPDOWN -->
+<div id="user-dropdown" class="user-dropdown">
+  <button class="user-dropdown-item" onclick="closeUserMenu()">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span id="dropdown-email">usuario</span>
+  </button>
+  <button class="user-dropdown-item" onclick="closeUserMenu()">
+    <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    <span id="dropdown-plan">Plan Free</span>
+  </button>
+  <button class="user-dropdown-item danger" onclick="signOut()">
+    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+    Cerrar sesion
+  </button>
+</div>
+
+<div id="overlay" onclick="closePanel(); closeHistoryPanel(); closeUserMenu();"></div>
 
 <div id="wrapper">
 
@@ -832,6 +994,10 @@
       <h1>LexBolivia</h1>
       <p>Asistente juridico · Estado Plurinacional</p>
     </div>
+    <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()" style="display:none">
+      <div class="user-avatar" id="user-avatar">?</div>
+      <span class="user-email" id="user-email-display">...</span>
+    </button>
     <div id="view-toggle">
       <button class="vt-btn active" id="vt-chat" onclick="switchView('chat')">
         <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
@@ -917,6 +1083,12 @@
 
     <!-- ── CHAT VIEW ── -->
     <div id="chat-view">
+      <!-- Usage bar -->
+      <div id="usage-bar" style="display:none">
+        <span class="usage-plan" id="usage-plan-label">Free</span>
+        <div class="usage-track"><div class="usage-fill" id="usage-fill" style="width:0%"></div></div>
+        <span class="usage-label" id="usage-label-text">0 / 10 mensajes</span>
+      </div>
       <!-- Messages -->
       <div id="messages">
         <div class="msg bot">
@@ -1026,11 +1198,31 @@ Esta orientacion es de caracter informativo y no sustituye el asesoramiento de u
 
 </div>
 
-<script>
-// URL del backend - cambia esto a tu URL de produccion cuando despliegues
+<script type="module">
+// URL del backend
 const BACKEND_URL = 'https://lexbolivia-backend.onrender.com';
 
-let sessionId = null;
+// ── Firebase Auth (cliente) ──
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut as fbSignOut, updateProfile } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
+import { getFirestore, doc, onSnapshot, setDoc, collection, query, orderBy, limit, addDoc, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCnAtbGQeIZ8pSfGYz1fHpk5-uCgzK3eoE",
+  authDomain: "asistente-juridico-76a09.firebaseapp.com",
+  projectId: "asistente-juridico-76a09",
+  storageBucket: "asistente-juridico-76a09.firebasestorage.app",
+  messagingSenderId: "951347262110",
+  appId: "1:951347262110:web:5ecba101d72abd1642c18f"
+};
+const fbApp  = initializeApp(firebaseConfig);
+const auth   = getAuth(fbApp);
+const db     = getFirestore(fbApp);
+
+let sessionId    = null;
+let currentUser  = null;
+let userPlanData = { plan: 'free', messagesUsed: 0, limit: 10, active: true };
+let userDocUnsub = null;
 
 const AREAS = {
   general: {
@@ -1188,17 +1380,253 @@ const overlay = document.getElementById('overlay');
 
 document.getElementById('welcome-ts').textContent = now();
 
-// Iniciar sesion en el backend
+// ══════════════════════════════════════
+//  AUTH SCREEN LOGIC
+// ══════════════════════════════════════
+let authMode = 'login';
+
+function showAuthTab(mode) {
+  authMode = mode;
+  document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+  document.getElementById('tab-register').classList.toggle('active', mode === 'register');
+  document.getElementById('field-nombre').style.display = mode === 'register' ? 'block' : 'none';
+  document.getElementById('auth-submit-btn').textContent = mode === 'login' ? 'Iniciar sesion' : 'Crear cuenta';
+  document.getElementById('auth-error').classList.remove('show');
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+async function authSubmit() {
+  const email    = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const nombre   = document.getElementById('auth-nombre').value.trim();
+  const btn      = document.getElementById('auth-submit-btn');
+
+  if (!email || !password) { showAuthError('Completa todos los campos.'); return; }
+  if (authMode === 'register' && !nombre) { showAuthError('Ingresa tu nombre.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Cargando...';
+  document.getElementById('auth-error').classList.remove('show');
+
+  try {
+    if (authMode === 'login') {
+      await signInWithEmailAndPassword(auth, email, password);
+    } else {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(cred.user, { displayName: nombre });
+      // Crear documento de usuario en Firestore con plan free
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        email,
+        nombre,
+        plan: 'free',
+        active: true,
+        messagesUsed: 0,
+        messageCount: 0,
+        sessionCount: 0,
+        createdAt: serverTimestamp(),
+        lastActivity: serverTimestamp()
+      });
+    }
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = authMode === 'login' ? 'Iniciar sesion' : 'Crear cuenta';
+    const msgs = {
+      'auth/user-not-found':      'No existe una cuenta con ese correo.',
+      'auth/wrong-password':      'Contrasena incorrecta.',
+      'auth/email-already-in-use':'Ese correo ya esta registrado.',
+      'auth/weak-password':       'La contrasena debe tener al menos 6 caracteres.',
+      'auth/invalid-email':       'Correo electronico invalido.',
+      'auth/invalid-credential':  'Correo o contrasena incorrectos.'
+    };
+    showAuthError(msgs[e.code] || 'Error: ' + e.message);
+  }
+}
+
+// Enter en inputs de auth
+['auth-email','auth-password','auth-nombre'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') authSubmit(); });
+});
+
+// ══════════════════════════════════════
+//  AUTH STATE OBSERVER
+// ══════════════════════════════════════
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    currentUser = user;
+    document.getElementById('auth-screen').classList.add('hidden');
+
+    // Header usuario
+    const inicial = (user.displayName || user.email || '?')[0].toUpperCase();
+    document.getElementById('user-avatar').textContent = inicial;
+    document.getElementById('user-email-display').textContent = user.displayName || user.email;
+    document.getElementById('user-menu-btn').style.display = 'flex';
+    document.getElementById('dropdown-email').textContent = user.email;
+
+    // Escuchar cambios del plan en tiempo real
+    if (userDocUnsub) userDocUnsub();
+    userDocUnsub = onSnapshot(doc(db, 'users', user.uid), snap => {
+      if (snap.exists()) {
+        const d = snap.data();
+        userPlanData = {
+          plan:         d.plan || 'free',
+          messagesUsed: d.messagesUsed || 0,
+          limit:        planLimit(d.plan),
+          active:       d.active !== false
+        };
+      } else {
+        userPlanData = { plan:'free', messagesUsed:0, limit:10, active:true };
+      }
+      updateUsageBar();
+      updateAreaAccess();
+    });
+
+    // Iniciar sesion en backend
+    await initSession();
+    // Cargar historial desde Firestore
+    await loadHistoryFromFirestore();
+
+  } else {
+    currentUser = null;
+    document.getElementById('auth-screen').classList.remove('hidden');
+    document.getElementById('user-menu-btn').style.display = 'none';
+    if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
+  }
+});
+
+function planLimit(plan) {
+  const limits = { free:10, basico:50, profesional:300, empresarial:Infinity };
+  return limits[plan] || 10;
+}
+
+function planAreas(plan) {
+  const areas = {
+    free:          ['general'],
+    basico:        ['general','laboral','civil'],
+    profesional:   Object.keys(AREAS),
+    empresarial:   Object.keys(AREAS)
+  };
+  return areas[plan] || ['general'];
+}
+
+function updateUsageBar() {
+  const bar = document.getElementById('usage-bar');
+  const fill = document.getElementById('usage-fill');
+  const label = document.getElementById('usage-label-text');
+  const planLbl = document.getElementById('usage-plan-label');
+  const dropdown = document.getElementById('dropdown-plan');
+
+  const { plan, messagesUsed, limit } = userPlanData;
+  bar.style.display = 'flex';
+  planLbl.textContent = plan.toUpperCase();
+  dropdown.textContent = 'Plan ' + plan.charAt(0).toUpperCase() + plan.slice(1);
+
+  if (limit === Infinity) {
+    fill.style.width = '10%';
+    fill.className = 'usage-fill';
+    label.textContent = messagesUsed + ' mensajes usados';
+  } else {
+    const pct = Math.min(100, Math.round((messagesUsed / limit) * 100));
+    fill.style.width = pct + '%';
+    fill.className = 'usage-fill' + (pct >= 100 ? ' full' : pct >= 80 ? ' warn' : '');
+    label.textContent = messagesUsed + ' / ' + limit + ' mensajes';
+  }
+}
+
+function updateAreaAccess() {
+  const allowed = planAreas(userPlanData.plan);
+  document.querySelectorAll('.area-card').forEach(card => {
+    const area = card.dataset.area;
+    const locked = !allowed.includes(area);
+    card.style.opacity = locked ? '0.45' : '1';
+    card.style.cursor  = locked ? 'not-allowed' : 'pointer';
+    card.title = locked ? 'Disponible en plan Profesional o superior' : '';
+  });
+  // Si el area actual no esta permitida, cambiar a general
+  if (!allowed.includes(currentArea)) {
+    currentArea = 'general';
+    document.getElementById('current-area-text').textContent = 'General';
+  }
+}
+
+// ══════════════════════════════════════
+//  USER MENU
+// ══════════════════════════════════════
+function toggleUserMenu() {
+  document.getElementById('user-dropdown').classList.toggle('open');
+}
+function closeUserMenu() {
+  document.getElementById('user-dropdown').classList.remove('open');
+}
+async function signOut() {
+  saveCurrentConversation();
+  await fbSignOut(auth);
+  closeUserMenu();
+  history = [];
+  msgsEl.innerHTML = '';
+}
+
+// ══════════════════════════════════════
+//  SESION EN BACKEND
+// ══════════════════════════════════════
 async function initSession() {
   try {
-    const res = await fetch(BACKEND_URL + '/api/session', { method: 'POST' });
+    const token = await currentUser.getIdToken();
+    const res = await fetch(BACKEND_URL + '/api/session', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }
+    });
     const data = await res.json();
     sessionId = data.sessionId;
   } catch (e) {
-    console.warn('No se pudo conectar al backend, modo sin registro activo');
+    console.warn('Backend no disponible');
   }
 }
-initSession();
+
+// ══════════════════════════════════════
+//  HISTORIAL EN FIRESTORE
+// ══════════════════════════════════════
+async function loadHistoryFromFirestore() {
+  if (!currentUser) return;
+  try {
+    const q = query(
+      collection(db, 'users', currentUser.uid, 'conversations'),
+      orderBy('createdAt', 'desc'),
+      limit(5)
+    );
+    const snap = await getDocs(q);
+    const convs = [];
+    snap.forEach(d => convs.push({ id: d.id, ...d.data() }));
+    // Guardar en localStorage como cache para el panel
+    localStorage.setItem('lex_conversations', JSON.stringify(convs.map(c => ({
+      id: c.id,
+      area: c.area,
+      areaLabel: AREAS[c.area]?.label || c.area,
+      preview: c.messages?.[0]?.content?.slice(0, 80) || 'Conversacion',
+      messages: c.messages || [],
+      date: c.createdAt?.toDate?.().toLocaleString('es-BO', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }) || ''
+    }))));
+    renderHistoryPanel();
+    updateHistCount();
+  } catch(e) { console.warn('loadHistory:', e); }
+}
+
+async function saveConvToFirestore(convMessages, area) {
+  if (!currentUser || !convMessages.length) return;
+  try {
+    await addDoc(collection(db, 'users', currentUser.uid, 'conversations'), {
+      area,
+      messages: convMessages,
+      createdAt: serverTimestamp()
+    });
+    await loadHistoryFromFirestore();
+  } catch(e) { console.warn('saveConv:', e); }
+}
 
 function now() {
   const d = new Date();
@@ -1256,6 +1684,7 @@ function getHistory() {
 }
 
 function newConversation() {
+  if (history.length) saveConvToFirestore([...history], currentArea);
   saveCurrentConversation();
   history = [];
   renderChips(AREAS[currentArea].chips);
@@ -1327,6 +1756,23 @@ function removeTyping() {
 async function sendMessage() {
   const text = inputEl.value.trim();
   if (!text) return;
+  if (!currentUser) { showAuthError('Debes iniciar sesion.'); return; }
+
+  // Verificar limite de plan
+  if (!userPlanData.active) {
+    addMsg('bot', 'Tu cuenta no esta activa. Contacta al administrador.');
+    return;
+  }
+  if (userPlanData.limit !== Infinity && userPlanData.messagesUsed >= userPlanData.limit) {
+    addMsg('bot', `Has alcanzado el limite de ${userPlanData.limit} mensajes de tu plan ${userPlanData.plan.toUpperCase()}. Actualiza tu plan para continuar.`);
+    return;
+  }
+
+  // Verificar area permitida
+  if (!planAreas(userPlanData.plan).includes(currentArea)) {
+    addMsg('bot', `El area "${AREAS[currentArea].label}" no esta disponible en tu plan ${userPlanData.plan.toUpperCase()}. Actualiza tu suscripcion.`);
+    return;
+  }
 
   chipsEl.innerHTML = '';
   inputEl.value = '';
@@ -1340,11 +1786,15 @@ async function sendMessage() {
   const area = AREAS[currentArea];
 
   try {
+    const token = await currentUser.getIdToken();
     const res = await fetch(BACKEND_URL + '/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
       body: JSON.stringify({
-        sessionId: sessionId,
+        sessionId,
         area: currentArea,
         message: text,
         history: getHistory()
@@ -1354,7 +1804,11 @@ async function sendMessage() {
     const data = await res.json();
     removeTyping();
 
-    if (!res.ok) {
+    if (res.status === 429) {
+      addMsg('bot', data.message || 'Limite de mensajes alcanzado.');
+    } else if (res.status === 403) {
+      addMsg('bot', data.message || 'Area no disponible en tu plan.');
+    } else if (!res.ok) {
       addMsg('bot', 'Error del servidor. Intente nuevamente.');
     } else {
       const reply = data.reply || 'No se pudo generar una respuesta.';
@@ -1364,7 +1818,7 @@ async function sendMessage() {
 
   } catch(e) {
     removeTyping();
-    addMsg('bot', 'Error de conexion. Verifique que el servidor este activo.');
+    addMsg('bot', 'Error de conexion. El servidor puede estar iniciando, intente en unos segundos.');
   }
 
   btnEl.disabled = false;
