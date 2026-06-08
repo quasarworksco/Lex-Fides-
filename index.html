@@ -126,19 +126,20 @@
   .usage-label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
 
   .user-menu-btn {
-    display: flex; align-items: center; gap: 7px;
+    display: flex; align-items: center; gap: 6px;
     background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 20px; padding: 5px 12px 5px 5px;
+    border-radius: 20px; padding: 4px 10px 4px 4px;
     cursor: pointer; transition: background 0.18s; flex-shrink: 0;
+    max-width: 160px;
   }
   .user-menu-btn:hover { background: rgba(255,255,255,0.16); }
   .user-avatar {
-    width: 28px; height: 28px; border-radius: 50%;
+    width: 26px; height: 26px; border-radius: 50%;
     background: linear-gradient(135deg, var(--gold), var(--gold-bright));
     display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 700; color: var(--navy);
+    font-size: 10px; font-weight: 700; color: var(--navy); flex-shrink: 0;
   }
-  .user-email { font-size: 11px; color: rgba(255,255,255,0.75); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .user-email { font-size: 11px; color: rgba(255,255,255,0.75); max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   .user-dropdown {
     position: absolute; top: 60px; right: 16px; z-index: 200;
@@ -206,12 +207,14 @@
   #top-header {
     background: var(--navy);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding: 20px 26px;
+    padding: 14px 20px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     position: relative;
     overflow: hidden;
+    flex-wrap: nowrap;
+    min-width: 0;
   }
   #top-header::before {
     content: '';
@@ -238,16 +241,18 @@
   }
   .logo-mark svg { width: 26px; height: 26px; fill: var(--navy); }
 
-  .brand { flex: 1; }
+  .brand { flex: 1; min-width: 0; overflow: hidden; }
   .brand h1 {
     font-family: 'Libre Baskerville', serif;
-    font-size: 21px; font-weight: 700;
+    font-size: 19px; font-weight: 700;
     color: #fff; letter-spacing: -0.01em; line-height: 1.1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .brand p {
-    font-size: 11px; color: rgba(255,255,255,0.45);
+    font-size: 10px; color: rgba(255,255,255,0.45);
     margin-top: 3px; letter-spacing: 0.05em;
-    text-transform: uppercase;
+    text-transform: uppercase; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
   }
 
   .status-pill {
@@ -376,9 +381,12 @@
     border-left: 1px solid var(--border);
     border-right: 1px solid var(--border);
     display: flex; flex-direction: column;
-    height: 560px;
+    height: 580px;
     overflow: hidden;
     position: relative;
+  }
+  @media (max-height: 750px) {
+    #app { height: calc(100vh - 180px); }
   }
 
   /* ── MESSAGES ── */
@@ -646,21 +654,23 @@
     padding: 3px;
     gap: 2px;
     flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.12);
   }
   .vt-btn {
-    display: flex; align-items: center; gap: 6px;
-    padding: 6px 13px; border-radius: 8px; border: none;
-    font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+    display: flex; align-items: center; gap: 5px;
+    padding: 6px 11px; border-radius: 8px; border: none;
+    font-size: 11.5px; font-weight: 600; font-family: 'Inter', sans-serif;
     cursor: pointer; transition: all 0.18s ease;
     color: rgba(255,255,255,0.55); background: transparent;
+    white-space: nowrap;
   }
-  .vt-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  .vt-btn svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
   .vt-btn.active {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.18);
     color: #fff;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.18);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.22);
   }
-  .vt-btn:hover:not(.active) { color: rgba(255,255,255,0.80); }
+  .vt-btn:hover:not(.active) { color: rgba(255,255,255,0.80); background: rgba(255,255,255,0.07); }
 
   /* ── BIBLIOTECA ── */
   #lib-view {
@@ -940,10 +950,22 @@
     #footer-bar { display: none; }
   }
 
+  @media (max-width: 560px) {
+    #top-header { gap: 8px; padding: 12px 14px; }
+    .logo-mark { width: 36px; height: 36px; border-radius: 9px; }
+    .logo-mark svg { width: 20px; height: 20px; }
+    .brand h1 { font-size: 16px; }
+    .brand p { display: none; }
+    .user-email { display: none; }
+    .user-menu-btn { padding: 4px; border-radius: 50%; max-width: none; }
+    .vt-btn { padding: 5px 8px; font-size: 11px; gap: 4px; }
+  }
+
   @media (max-width: 360px) {
-    .brand h1 { font-size: 15px; }
+    .brand h1 { font-size: 14px; }
     #area-panel { grid-template-columns: repeat(2, 1fr); gap: 6px; }
     .bubble { font-size: 12.5px; }
+    .vt-btn span { display: none; }
   }
 </style>
 </head>
@@ -1052,16 +1074,12 @@
     <div id="view-toggle">
       <button class="vt-btn active" id="vt-chat" onclick="switchView('chat')">
         <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Chat
+        <span>Chat</span>
       </button>
       <button class="vt-btn" id="vt-lib" onclick="switchView('lib')">
         <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-        Biblioteca
+        <span>Biblioteca</span>
       </button>
-    </div>
-    <div class="status-pill" style="display:none" id="status-pill-desktop">
-      <div class="status-dot"></div>
-      <span>Sistema activo</span>
     </div>
   </div>
 
