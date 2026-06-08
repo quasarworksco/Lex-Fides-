@@ -396,6 +396,31 @@
   #send-btn svg { width: 18px; height: 18px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.15s; }
   #send-btn:not(:disabled):hover svg { transform: translateX(1px); }
 
+  #new-chat-btn {
+    width: 44px; height: 44px;
+    border-radius: 13px;
+    background: var(--surface-alt);
+    border: 1.5px solid var(--border-strong);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+  }
+  #new-chat-btn:hover { background: var(--gold-pale); border-color: rgba(184,134,11,0.35); color: var(--gold); }
+  #new-chat-btn svg { width: 18px; height: 18px; }
+
+  .session-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 4px 0;
+    font-size: 10.5px; color: var(--text-muted);
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .session-divider::before, .session-divider::after {
+    content: ''; flex: 1;
+    height: 1px; background: var(--border);
+  }
+
   /* ── FOOTER ── */
   #footer-bar {
     background: var(--navy);
@@ -498,6 +523,7 @@
     }
     #user-input { font-size: 16px; padding: 10px 13px; border-radius: 12px; min-height: 42px; }
     #send-btn { width: 42px; height: 42px; border-radius: 12px; }
+    #new-chat-btn { width: 42px; height: 42px; border-radius: 12px; }
 
     #footer-bar { display: none; }
   }
@@ -604,6 +630,9 @@ Esta orientacion es de caracter informativo y no sustituye el asesoramiento de u
 
     <!-- Input -->
     <div id="input-area">
+      <button id="new-chat-btn" onclick="newConversation()" title="Nueva conversacion">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
       <textarea id="user-input" placeholder="Escriba su consulta legal..." rows="1"></textarea>
       <button id="send-btn" onclick="sendMessage()" title="Enviar">
         <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -669,6 +698,7 @@ const AREAS = {
   }
 };
 
+const MAX_HISTORY_PAIRS = 10; // maximo 10 intercambios antes de recortar
 let currentArea = 'general';
 let history = [];
 let panelOpen = false;
@@ -713,6 +743,47 @@ function selectArea(card) {
   document.getElementById('current-area-text').textContent = AREAS[currentArea].label;
   renderChips(AREAS[currentArea].chips);
   closePanel();
+}
+
+function buildSystemPrompt(area) {
+  return `Eres LexBolivia, un asesor juridico conversacional especializado en derecho boliviano. ${area.system}
+
+INSTRUCCIONES DE CONVERSACION:
+- Mantenes el hilo de la conversacion: recuerdas lo que el cliente dijo antes y construyes sobre eso.
+- Haces preguntas de seguimiento cuando necesitas mas informacion para orientar mejor al cliente.
+- Si el cliente menciona datos personales o de su caso (nombres, fechas, hechos), los referencias en respuestas posteriores.
+- Adaptas el nivel de detalle segun las respuestas del cliente: si es su primera consulta, explicas conceptos; si ya entiende, vas directo al punto.
+- Cuando el caso lo requiere, preguntas activamente: "Cuanto tiempo lleva trabajando ahi?", "Tiene contrato firmado?", etc.
+- Eres proactivo: si detectas que el cliente puede tener otro problema legal relacionado, lo mencionas.
+- Respondes en espanol boliviano claro y accesible, sin jerga legal innecesaria.
+- Citas articulos y normas especificas cuando aportan valor.
+- No uses emojis.
+- Al final de cada respuesta, cuando corresponda, haz UNA pregunta de seguimiento relevante para profundizar en el caso.
+- Recuerda siempre aclarar que tu orientacion es informativa y que para casos concretos se recomienda consultar con un abogado habilitado en Bolivia.`;
+}
+
+function getHistory() {
+  // Mantiene solo los ultimos MAX_HISTORY_PAIRS pares para no exceder tokens
+  const maxMsgs = MAX_HISTORY_PAIRS * 2;
+  return history.length > maxMsgs ? history.slice(-maxMsgs) : history;
+}
+
+function newConversation() {
+  history = [];
+  renderChips(AREAS[currentArea].chips);
+
+  const divider = document.createElement('div');
+  divider.className = 'session-divider';
+  divider.textContent = 'Nueva consulta';
+  msgsEl.appendChild(divider);
+
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.style.animation = 'msgIn 0.28s cubic-bezier(0.34,1.56,0.64,1)';
+  div.innerHTML = `<span class="area-tag">LEXBOLIVIA</span><div class="bubble welcome-bubble">Listo para una nueva consulta. Puede preguntarme sobre cualquier tema del derecho boliviano o seleccionar un area especifica.</div><span class="ts">${now()}</span>`;
+  msgsEl.appendChild(div);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+  inputEl.focus();
 }
 
 function renderChips(list) {
@@ -789,10 +860,10 @@ async function sendMessage() {
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        max_tokens: 1000,
+        max_tokens: 1200,
         messages: [
-          { role: 'system', content: area.system + '\n\nResponde en espanol boliviano claro y accesible. Cita articulos y normas especificas cuando sea relevante. Se conciso (maximo 4 parrafos). Aclara que tu orientacion es informativa y no reemplaza a un abogado habilitado en Bolivia. No uses emojis.' },
-          ...history
+          { role: 'system', content: buildSystemPrompt(area) },
+          ...getHistory()
         ]
       })
     });
