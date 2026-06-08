@@ -244,10 +244,10 @@
   .plan-card-price { font-size: 22px; font-weight: 800; color: var(--navy); }
   .plan-card-price span { font-size: 12px; font-weight: 400; color: var(--text-muted); }
   .plan-badge {
-    position: absolute; top: 12px; right: 56px;
+    position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
     background: var(--gold); color: var(--navy);
-    font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 20px;
-    text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 9px; font-weight: 800; padding: 3px 10px; border-radius: 0 0 8px 8px;
+    text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap;
   }
   .plan-card-feats { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
   .plan-card-feats li {
@@ -1258,7 +1258,7 @@
         </div>
       </div>
 
-      <div class="plan-card popular" data-plan="profesional" onclick="selectPlanCard(this)">
+      <div class="plan-card popular" data-plan="profesional" onclick="selectPlanCard(this)" style="padding-top:26px">
         <div class="plan-badge">Popular</div>
         <div style="display:flex;align-items:center;gap:12px">
           <div class="plan-select-radio"></div>
