@@ -2350,6 +2350,28 @@ function consultarEnChat(tema, norma) {
   inputEl.style.height = Math.min(inputEl.scrollHeight, 110) + 'px';
   inputEl.focus();
 }
+
+// Expose module-scoped functions to global scope for HTML onclick attributes
+window.authSubmit = authSubmit;
+window.signInWithGoogle = signInWithGoogle;
+window.showAuthTab = showAuthTab;
+window.switchView = switchView;
+window.sendMessage = sendMessage;
+window.newConversation = newConversation;
+window.togglePanel = togglePanel;
+window.closePanel = closePanel;
+window.selectArea = selectArea;
+window.toggleHistoryPanel = toggleHistoryPanel;
+window.closeHistoryPanel = closeHistoryPanel;
+window.loadConversation = loadConversation;
+window.deleteConversation = deleteConversation;
+window.libSelectCat = libSelectCat;
+window.libSelectItem = libSelectItem;
+window.libSearch = libSearch;
+window.consultarEnChat = consultarEnChat;
+window.toggleUserMenu = toggleUserMenu;
+window.closeUserMenu = closeUserMenu;
+window.signOut = signOut;
 </script>
 </body>
 </html>
