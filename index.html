@@ -1114,11 +1114,11 @@
       <span class="user-email" id="user-email-display">...</span>
     </button>
     <div id="view-toggle">
-      <button class="vt-btn active" id="vt-chat" onclick="switchView('chat')">
+      <button class="vt-btn active" id="vt-chat">
         <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         <span>Chat</span>
       </button>
-      <button class="vt-btn" id="vt-lib" onclick="switchView('lib')">
+      <button class="vt-btn" id="vt-lib">
         <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
         <span>Biblioteca</span>
       </button>
@@ -2447,6 +2447,10 @@ function consultarEnChat(tema, norma) {
   inputEl.style.height = Math.min(inputEl.scrollHeight, 110) + 'px';
   inputEl.focus();
 }
+
+// Toggle Chat / Biblioteca (wired here to avoid module scope issues)
+document.getElementById('vt-chat').addEventListener('click', () => switchView('chat'));
+document.getElementById('vt-lib').addEventListener('click',  () => switchView('lib'));
 
 // Expose module-scoped functions to global scope for HTML onclick attributes
 window.authSubmit = authSubmit;
