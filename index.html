@@ -30,6 +30,38 @@
   html { scroll-behavior: smooth; }
 
   /* ── AUTH SCREEN ── */
+  /* ── SPLASH de carga inicial ── */
+  #splash-screen {
+    position: fixed; inset: 0; z-index: 1100;
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 60%, #0F2A55 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    transition: opacity 0.4s ease;
+  }
+  #splash-screen.fade-out { opacity: 0; pointer-events: none; }
+  #splash-screen.gone { display: none; }
+  .splash-logo {
+    width: 64px; height: 64px; border-radius: 18px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 30px rgba(184,134,11,0.4);
+    animation: splashPulse 1.5s ease-in-out infinite;
+  }
+  .splash-logo svg { width: 36px; height: 36px; fill: var(--navy); }
+  .splash-title { font-family: 'Libre Baskerville', serif; font-size: 26px; color: #fff; font-weight: 700; }
+  .splash-sub { font-size: 12px; color: rgba(255,255,255,0.45); letter-spacing: 0.1em; text-transform: uppercase; }
+  .splash-dots { display: flex; gap: 8px; }
+  .splash-dots span {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    animation: wave 1.4s ease-in-out infinite;
+  }
+  .splash-dots span:nth-child(2) { animation-delay: 0.18s; }
+  .splash-dots span:nth-child(3) { animation-delay: 0.36s; }
+  @keyframes splashPulse {
+    0%,100% { box-shadow: 0 8px 30px rgba(184,134,11,0.4); transform: scale(1); }
+    50%      { box-shadow: 0 8px 50px rgba(184,134,11,0.6); transform: scale(1.04); }
+  }
+
   #auth-screen {
     position: fixed; inset: 0; z-index: 999;
     background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 60%, #0F2A55 100%);
@@ -972,7 +1004,17 @@
 <body>
 
 <!-- AUTH SCREEN -->
-<div id="auth-screen">
+<!-- Splash de carga mientras Firebase restaura la sesion -->
+<div id="splash-screen">
+  <div class="splash-logo">
+    <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+  </div>
+  <div class="splash-title">LexBolivia</div>
+  <div class="splash-sub">Cargando sesion...</div>
+  <div class="splash-dots"><span></span><span></span><span></span></div>
+</div>
+
+<div id="auth-screen" class="hidden">
   <div class="auth-box">
     <div class="auth-logo">
       <div class="auth-logo-mark"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg></div>
@@ -1601,10 +1643,46 @@ async function signInWithGoogle() {
 // ══════════════════════════════════════
 //  AUTH STATE OBSERVER
 // ══════════════════════════════════════
+// ── Inactividad: cerrar sesion tras 5 minutos sin actividad ──
+const INACTIVITY_MS = 5 * 60 * 1000;
+let inactivityTimer = null;
+
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(async () => {
+    if (currentUser) {
+      await fbSignOut(auth);
+    }
+  }, INACTIVITY_MS);
+}
+
+function startInactivityWatch() {
+  ['mousemove','keydown','touchstart','click','scroll'].forEach(ev =>
+    document.addEventListener(ev, resetInactivityTimer, { passive: true })
+  );
+  resetInactivityTimer();
+}
+
+function stopInactivityWatch() {
+  clearTimeout(inactivityTimer);
+  ['mousemove','keydown','touchstart','click','scroll'].forEach(ev =>
+    document.removeEventListener(ev, resetInactivityTimer)
+  );
+}
+
+// ── Ocultar splash ──
+function hideSplash() {
+  const splash = document.getElementById('splash-screen');
+  splash.classList.add('fade-out');
+  setTimeout(() => splash.classList.add('gone'), 420);
+}
+
 onAuthStateChanged(auth, async user => {
+  hideSplash();
   if (user) {
     currentUser = user;
     document.getElementById('auth-screen').classList.add('hidden');
+    startInactivityWatch();
 
     // Header usuario
     const inicial = (user.displayName || user.email || '?')[0].toUpperCase();
@@ -1638,6 +1716,7 @@ onAuthStateChanged(auth, async user => {
 
   } else {
     currentUser = null;
+    stopInactivityWatch();
     document.getElementById('auth-screen').classList.remove('hidden');
     document.getElementById('user-menu-btn').style.display = 'none';
     if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
