@@ -438,6 +438,218 @@
   }
   #overlay.open { display: block; }
 
+  /* ── VIEW TOGGLE (Chat / Biblioteca) ── */
+  #view-toggle {
+    display: flex;
+    background: rgba(255,255,255,0.10);
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .vt-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 13px; border-radius: 8px; border: none;
+    font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+    cursor: pointer; transition: all 0.18s ease;
+    color: rgba(255,255,255,0.55); background: transparent;
+  }
+  .vt-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  .vt-btn.active {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.18);
+  }
+  .vt-btn:hover:not(.active) { color: rgba(255,255,255,0.80); }
+
+  /* ── BIBLIOTECA ── */
+  #lib-view {
+    display: none;
+    flex-direction: column;
+    flex: 1; overflow: hidden;
+  }
+  #lib-view.active { display: flex; }
+  #chat-view { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+  #chat-view.hidden { display: none; }
+
+  /* Barra de busqueda biblioteca */
+  #lib-search-bar {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex; gap: 10px; align-items: center;
+    flex-shrink: 0;
+  }
+  #lib-search-input {
+    flex: 1; border: 1.5px solid var(--border-strong);
+    border-radius: 10px; padding: 9px 14px;
+    font-size: 13px; font-family: 'Inter', sans-serif;
+    background: var(--surface-alt); color: var(--text);
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  #lib-search-input:focus {
+    border-color: var(--navy-light);
+    background: var(--surface);
+    box-shadow: 0 0 0 4px rgba(27,64,128,0.08);
+  }
+  #lib-search-input::placeholder { color: var(--text-muted); }
+  .lib-search-icon {
+    width: 38px; height: 38px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface-alt); border: 1.5px solid var(--border-strong);
+    border-radius: 10px;
+  }
+  .lib-search-icon svg { width: 16px; height: 16px; fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-linecap: round; }
+
+  /* Lista y detalle */
+  #lib-body {
+    display: flex; flex: 1; overflow: hidden;
+  }
+
+  /* Panel izquierdo: categorias */
+  #lib-sidebar {
+    width: 195px; flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    overflow-y: auto; background: var(--surface-alt);
+    padding: 10px 8px;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  #lib-sidebar::-webkit-scrollbar { width: 3px; }
+  #lib-sidebar::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+  .lib-cat-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px; border-radius: 9px; border: none;
+    background: transparent; cursor: pointer;
+    font-size: 12px; font-weight: 500; font-family: 'Inter', sans-serif;
+    color: var(--text-muted); text-align: left; width: 100%;
+    transition: all 0.16s;
+  }
+  .lib-cat-btn svg { width: 15px; height: 15px; fill: var(--text-muted); flex-shrink: 0; transition: fill 0.16s; }
+  .lib-cat-btn:hover { background: rgba(10,31,60,0.05); color: var(--text); }
+  .lib-cat-btn.active {
+    background: var(--navy); color: #fff;
+  }
+  .lib-cat-btn.active svg { fill: var(--gold-bright); }
+
+  /* Panel central: lista de normas */
+  #lib-list {
+    width: 220px; flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    overflow-y: auto; background: var(--surface);
+    padding: 8px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  #lib-list::-webkit-scrollbar { width: 3px; }
+  #lib-list::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+  .lib-item {
+    padding: 10px 12px; border-radius: 10px; cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.16s; background: var(--surface-alt);
+  }
+  .lib-item:hover { border-color: rgba(10,31,60,0.12); background: rgba(10,31,60,0.03); }
+  .lib-item.active { border-color: var(--navy); background: rgba(10,31,60,0.05); }
+  .lib-item-name {
+    font-size: 12px; font-weight: 600; color: var(--text); line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  .lib-item-law {
+    font-size: 10.5px; color: var(--gold); font-weight: 600; letter-spacing: 0.04em;
+  }
+  .lib-item-desc {
+    font-size: 11px; color: var(--text-muted); margin-top: 4px; line-height: 1.4;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+
+  /* Panel derecho: detalle */
+  #lib-detail {
+    flex: 1; overflow-y: auto; padding: 20px 22px;
+    background: var(--surface);
+  }
+  #lib-detail::-webkit-scrollbar { width: 4px; }
+  #lib-detail::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+
+  .lib-detail-empty {
+    height: 100%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px;
+    color: var(--text-muted);
+  }
+  .lib-detail-empty svg { width: 40px; height: 40px; fill: var(--border-strong); }
+  .lib-detail-empty p { font-size: 13px; text-align: center; }
+
+  .lib-detail-header {
+    margin-bottom: 18px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .lib-detail-law {
+    font-size: 11px; font-weight: 700; color: var(--gold);
+    text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px;
+  }
+  .lib-detail-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 17px; font-weight: 700; color: var(--navy); line-height: 1.25;
+    margin-bottom: 8px;
+  }
+  .lib-detail-meta {
+    font-size: 11.5px; color: var(--text-muted);
+    display: flex; flex-wrap: wrap; gap: 12px;
+  }
+  .lib-detail-meta span { display: flex; align-items: center; gap: 4px; }
+
+  .lib-ask-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    margin-top: 14px;
+    background: var(--navy); color: #fff;
+    border: none; border-radius: 9px; padding: 8px 16px;
+    font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+    cursor: pointer; transition: background 0.18s;
+  }
+  .lib-ask-btn:hover { background: var(--navy-mid); }
+  .lib-ask-btn svg { width: 13px; height: 13px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+
+  .lib-section { margin-bottom: 20px; }
+  .lib-section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--text-muted);
+    margin-bottom: 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .lib-section p {
+    font-size: 13px; color: var(--text); line-height: 1.7; margin-bottom: 10px;
+  }
+
+  .arts-grid { display: flex; flex-direction: column; gap: 8px; }
+  .art-card {
+    background: var(--surface-alt); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .art-card-num {
+    font-size: 10.5px; font-weight: 700; color: var(--navy-light);
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
+  }
+  .art-card-text { font-size: 12.5px; color: var(--text); line-height: 1.6; }
+
+  .lib-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .lib-tag {
+    font-size: 11px; padding: 3px 10px; border-radius: 10px;
+    background: var(--gold-pale); color: #6B5200;
+    border: 1px solid rgba(184,134,11,0.2); font-weight: 500;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .lib-tag:hover { background: rgba(212,160,23,0.18); }
+
+  /* Responsive biblioteca */
+  @media (max-width: 768px) {
+    #lib-sidebar { width: 150px; }
+    #lib-list { width: 180px; }
+  }
+  @media (max-width: 560px) {
+    #lib-sidebar { display: none; }
+    #lib-list { width: 140px; }
+    .lib-detail-title { font-size: 15px; }
+  }
+
   /* ── RESPONSIVE TABLET ── */
   @media (max-width: 768px) {
     body { padding: 16px 12px; align-items: flex-start; }
@@ -550,7 +762,17 @@
       <h1>LexBolivia</h1>
       <p>Asistente juridico · Estado Plurinacional</p>
     </div>
-    <div class="status-pill">
+    <div id="view-toggle">
+      <button class="vt-btn active" id="vt-chat" onclick="switchView('chat')">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Chat
+      </button>
+      <button class="vt-btn" id="vt-lib" onclick="switchView('lib')">
+        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        Biblioteca
+      </button>
+    </div>
+    <div class="status-pill" style="display:none" id="status-pill-desktop">
       <div class="status-dot"></div>
       <span>Sistema activo</span>
     </div>
@@ -612,32 +834,104 @@
       </div>
     </div>
 
-    <!-- Messages -->
-    <div id="messages">
-      <div class="msg bot">
-        <span class="area-tag">LEXBOLIVIA</span>
-        <div class="bubble welcome-bubble">Bienvenido a LexBolivia, su asistente de orientacion juridica del Estado Plurinacional de Bolivia.
+    <!-- ── CHAT VIEW ── -->
+    <div id="chat-view">
+      <!-- Messages -->
+      <div id="messages">
+        <div class="msg bot">
+          <span class="area-tag">LEXBOLIVIA</span>
+          <div class="bubble welcome-bubble">Bienvenido a LexBolivia, su asistente de orientacion juridica del Estado Plurinacional de Bolivia.
 
 Seleccione el area del derecho que necesita consultar usando el boton "Area juridica" en la parte superior, luego escriba su consulta.
 
 Esta orientacion es de caracter informativo y no sustituye el asesoramiento de un abogado profesional habilitado en Bolivia.</div>
-        <span class="ts" id="welcome-ts"></span>
+          <span class="ts" id="welcome-ts"></span>
+        </div>
+      </div>
+
+      <!-- Chips -->
+      <div id="chips"></div>
+
+      <!-- Input -->
+      <div id="input-area">
+        <button id="new-chat-btn" onclick="newConversation()" title="Nueva conversacion">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <textarea id="user-input" placeholder="Escriba su consulta legal..." rows="1"></textarea>
+        <button id="send-btn" onclick="sendMessage()" title="Enviar">
+          <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
       </div>
     </div>
 
-    <!-- Chips -->
-    <div id="chips"></div>
+    <!-- ── BIBLIOTECA VIEW ── -->
+    <div id="lib-view">
+      <!-- Barra de busqueda -->
+      <div id="lib-search-bar">
+        <div class="lib-search-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <input type="text" id="lib-search-input" placeholder="Buscar norma, ley, articulo..." oninput="libSearch(this.value)">
+      </div>
 
-    <!-- Input -->
-    <div id="input-area">
-      <button id="new-chat-btn" onclick="newConversation()" title="Nueva conversacion">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-      </button>
-      <textarea id="user-input" placeholder="Escriba su consulta legal..." rows="1"></textarea>
-      <button id="send-btn" onclick="sendMessage()" title="Enviar">
-        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      </button>
+      <div id="lib-body">
+        <!-- Sidebar categorias -->
+        <div id="lib-sidebar">
+          <div class="lib-cat-btn active" data-cat="todos" onclick="libSelectCat(this)">
+            <svg viewBox="0 0 16 16"><path d="M2 3h12v1H2zm0 3h12v1H2zm0 3h12v1H2zm0 3h8v1H2z"/></svg>
+            Todos
+          </div>
+          <div class="lib-cat-btn" data-cat="constitucional" onclick="libSelectCat(this)">
+            <svg viewBox="0 0 16 16"><path d="M8 1L1 4v2h14V4L8 1zM2 7v5h2V7H2zm5 0v5h2V7H7zm5 0v5h2V7h-2zM1 13h14v2H1z"/></svg>
+            Constitucional
+          </div>
+          <div class="lib-cat-btn" data-cat="laboral" onclick="libSelectCat(this)">
+            <svg viewBox="0 0 16 16"><path d="M6 2a1 1 0 00-1 1v1H3a1 1 0 00-1 1v8a1 1 0 001 1h10a1 1 0 001-1V5a1 1 0 00-1-1h-2V3a1 1 0 00-1-1H6zm0 1h4v1H6V3zm-3 3h10v7H3V6z"/></svg>
+            Laboral
+          </div>
+          <div class="lib-cat-btn" data-cat="penal" onclick="libSelectCat(this)">
+            <svg viewBox="0 0 16 16"><path d="M8 1l7 3.5V8c0 3.6-2.6 7-7 8C1.6 15 -1 11.6-1 8V4.5L8 1z"/></svg>
+            Penal
+          </div>
+          <div class="lib-cat-btn" data-cat="civil" onclick="libSelectCat(this)">
+            <svg viewBox="0 0 16 16"><path d="M4 1h8a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V2a1 1 0 011-1z"/></svg>
+            Civil
+          </div>
+          <div class="lib-cat-btn" data-cat="familiar" onclick="libSelectCat(this)">
+            <svg viewBox="0 0 16 16"><path d="M8 1a2.5 2.5 0 110 5A2.5 2.5 0 018 1zm-5 9c0-2.2 2.2-4 5-4s5 1.8 5 4v1H3v-1z"/></svg>
+            Familiar
+          </div>
+          <div class="lib-cat-btn" data-cat="comercial" onclick="libSelectCat(this)">
+            <svg viewBox="0 0 16 16"><path d="M1 3h14v2H1zm1 3h12l-1 7H3L2 6z"/></svg>
+            Comercial
+          </div>
+          <div class="lib-cat-btn" data-cat="administrativo" onclick="libSelectCat(this)">
+            <svg viewBox="0 0 16 16"><path d="M3 2h10a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z"/></svg>
+            Administrativo
+          </div>
+          <div class="lib-cat-btn" data-cat="agrario" onclick="libSelectCat(this)">
+            <svg viewBox="0 0 16 16"><path d="M8 1C5 1 2 4 2 8s3 7 6 7 6-3 6-7-3-7-6-7z"/></svg>
+            Agrario
+          </div>
+          <div class="lib-cat-btn" data-cat="social" onclick="libSelectCat(this)">
+            <svg viewBox="0 0 16 16"><path d="M8 1a2 2 0 110 4A2 2 0 018 1zm0 5c-3 0-6 1.5-6 3v1h12v-1c0-1.5-3-3-6-3z"/></svg>
+            Social
+          </div>
+        </div>
+
+        <!-- Lista de normas -->
+        <div id="lib-list"></div>
+
+        <!-- Detalle -->
+        <div id="lib-detail">
+          <div class="lib-detail-empty">
+            <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            <p>Selecciona una norma<br>para ver su contenido</p>
+          </div>
+        </div>
+      </div>
     </div>
+
   </div>
 
   <!-- Footer -->
@@ -648,7 +942,10 @@ Esta orientacion es de caracter informativo y no sustituye el asesoramiento de u
 </div>
 
 <script>
-const API_KEY = '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';
+// URL del backend - cambia esto a tu URL de produccion cuando despliegues
+const BACKEND_URL = 'http://localhost:3000';
+
+let sessionId = null;
 
 const AREAS = {
   general: {
@@ -712,6 +1009,18 @@ const toggleBtn = document.getElementById('area-toggle-btn');
 const overlay = document.getElementById('overlay');
 
 document.getElementById('welcome-ts').textContent = now();
+
+// Iniciar sesion en el backend
+async function initSession() {
+  try {
+    const res = await fetch(BACKEND_URL + '/api/session', { method: 'POST' });
+    const data = await res.json();
+    sessionId = data.sessionId;
+  } catch (e) {
+    console.warn('No se pudo conectar al backend, modo sin registro activo');
+  }
+}
+initSession();
 
 function now() {
   const d = new Date();
@@ -852,32 +1161,31 @@ async function sendMessage() {
   const area = AREAS[currentArea];
 
   try {
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const res = await fetch(BACKEND_URL + '/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + API_KEY
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: 1200,
-        messages: [
-          { role: 'system', content: buildSystemPrompt(area) },
-          ...getHistory()
-        ]
+        sessionId: sessionId,
+        area: currentArea,
+        message: text,
+        history: getHistory()
       })
     });
 
     const data = await res.json();
     removeTyping();
 
-    const reply = data.choices?.[0]?.message?.content || 'No se pudo generar una respuesta. Intente nuevamente.';
-    history.push({ role: 'assistant', content: reply });
-    addMsg('bot', reply, area.label);
+    if (!res.ok) {
+      addMsg('bot', 'Error del servidor. Intente nuevamente.');
+    } else {
+      const reply = data.reply || 'No se pudo generar una respuesta.';
+      history.push({ role: 'assistant', content: reply });
+      addMsg('bot', reply, area.label);
+    }
 
   } catch(e) {
     removeTyping();
-    addMsg('bot', 'Error de conexion. Verifique su API Key e intente nuevamente.');
+    addMsg('bot', 'Error de conexion. Verifique que el servidor este activo.');
   }
 
   btnEl.disabled = false;
@@ -893,6 +1201,386 @@ inputEl.addEventListener('input', () => {
 });
 
 renderChips(AREAS.general.chips);
+
+// ══════════════════════════════════════════════════════
+//  VISTA TOGGLE (Chat / Biblioteca)
+// ══════════════════════════════════════════════════════
+function switchView(view) {
+  const chatView = document.getElementById('chat-view');
+  const libView  = document.getElementById('lib-view');
+  const areaBar  = document.getElementById('area-selector-bar');
+  const btnChat  = document.getElementById('vt-chat');
+  const btnLib   = document.getElementById('vt-lib');
+
+  if (view === 'chat') {
+    chatView.classList.remove('hidden');
+    libView.classList.remove('active');
+    areaBar.style.display = '';
+    btnChat.classList.add('active');
+    btnLib.classList.remove('active');
+  } else {
+    chatView.classList.add('hidden');
+    libView.classList.add('active');
+    areaBar.style.display = 'none';
+    btnLib.classList.add('active');
+    btnChat.classList.remove('active');
+    if (!libInitialized) initLib();
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  BIBLIOTECA JURIDICA — Datos
+// ══════════════════════════════════════════════════════
+const BIBLIOTECA = [
+  {
+    id: 'cpe2009',
+    cat: 'constitucional',
+    ley: 'CPE 2009',
+    nombre: 'Constitucion Politica del Estado Plurinacional',
+    anio: '2009',
+    organismo: 'Asamblea Constituyente',
+    descripcion: 'Norma suprema del Estado Plurinacional de Bolivia. Establece los derechos fundamentales, garantias constitucionales, estructura del Estado y las autonomias.',
+    tags: ['amparo','libertad','derechos','garantias','autonomia','TGN','TCP'],
+    resumen: 'La CPE de 2009 es la norma de mayor jerarquia en Bolivia. Reconoce 36 naciones y pueblos indigena originario campesinos, establece el Estado Plurinacional, la economia plural y consagra derechos civiles, politicos, economicos, sociales, culturales y colectivos.',
+    articulos: [
+      { num: 'Art. 13', texto: 'Los derechos reconocidos por esta Constitucion son inviolables, universales, interdependientes, indivisibles y progresivos.' },
+      { num: 'Art. 109', texto: 'Todos los derechos reconocidos en la Constitucion son directamente aplicables y gozan de iguales garantias para su proteccion.' },
+      { num: 'Art. 115', texto: 'Toda persona sera protegida oportuna y efectivamente por los jueces y tribunales en el ejercicio de sus derechos e intereses legitimos.' },
+      { num: 'Art. 119', texto: 'Las partes en conflicto gozaran de igualdad de oportunidades para ejercer durante el proceso las facultades y los derechos que les asistan.' },
+      { num: 'Art. 120', texto: 'Toda persona tiene derecho a ser oida por una autoridad jurisdiccional competente, independiente e imparcial, y no podra ser juzgada por comisiones especiales ni sometida a otras autoridades jurisdiccionales que las establecidas con anterioridad al hecho de la causa.' },
+      { num: 'Art. 125', texto: 'Toda persona que considere que su vida esta en peligro, que es ilegalmente perseguida, o que es indebidamente procesada o privada de libertad personal, podra interponer Accion de Libertad.' },
+      { num: 'Art. 128', texto: 'La Accion de Amparo Constitucional tendra lugar contra actos u omisiones ilegales o indebidos de los servidores publicos, o de persona individual o colectiva, que restrinjan, supriman o amenacen restringir o suprimir los derechos reconocidos por la CPE.' },
+      { num: 'Art. 196', texto: 'El Tribunal Constitucional Plurinacional vela por la supremacia de la Constitucion, ejerce el control de constitucionalidad y precautela el respeto y la vigencia de los derechos y las garantias constitucionales.' },
+    ]
+  },
+  {
+    id: 'lgt',
+    cat: 'laboral',
+    ley: 'Ley General del Trabajo',
+    nombre: 'Ley General del Trabajo — D.S. 13011',
+    anio: '1939 (vigente con modificaciones)',
+    organismo: 'Ministerio de Trabajo',
+    descripcion: 'Regula las relaciones laborales entre empleadores y trabajadores. Cubre contratos, jornadas, salarios, beneficios sociales y causales de despido.',
+    tags: ['desahucio','aguinaldo','indemnizacion','inamovilidad','jornada','salario'],
+    resumen: 'La LGT es la norma base del derecho laboral boliviano. Define tipos de contrato (indefinido, a plazo fijo, por obra), jornada de 8h diarias y 48h semanales, salario minimo, horas extras, vacaciones anuales, aguinaldo de Navidad y beneficios sociales al momento de la desvinculacion.',
+    articulos: [
+      { num: 'Art. 1', texto: 'El trabajo es la base del orden social y economico del Estado. Es un deber y un derecho.' },
+      { num: 'Art. 13', texto: 'Los contratos de trabajo pueden ser: por tiempo indefinido, a plazo fijo, o por realizacion de obra o servicio.' },
+      { num: 'Art. 46', texto: 'La jornada de trabajo no excedera de 8 horas diarias y 48 horas semanales. Las horas extras se pagaran con recargo del 100% sobre el salario ordinario.' },
+      { num: 'Art. 48', texto: 'Los trabajadores tienen derecho a 15 dias de vacacion anual pagada cumplido el primer ano de trabajo, y 20 dias cumplidos los 5 anos.' },
+      { num: 'Art. 55', texto: 'El empleador que despida a un trabajador sin causa justificada pagara un desahucio equivalente a 3 meses de sueldo y una indemnizacion de un mes por cada ano trabajado.' },
+      { num: 'Art. 57', texto: 'Son causas justificadas de despido: incumplimiento de contrato, ausencias injustificadas de mas de 6 dias, robo, hurto, o perjuicio al empleador.' },
+      { num: 'Art. 60', texto: 'La trabajadora embarazada goza de inamovilidad laboral desde la concepcion hasta un ano de nacido el hijo o hija.' },
+    ]
+  },
+  {
+    id: 'cp',
+    cat: 'penal',
+    ley: 'Ley 1768',
+    nombre: 'Codigo Penal Boliviano',
+    anio: '1997 (y modificaciones)',
+    organismo: 'Asamblea Legislativa Plurinacional',
+    descripcion: 'Define los delitos y las penas aplicables en Bolivia. Cubre delitos contra la vida, propiedad, honor, familia, funcion publica y economia.',
+    tags: ['homicidio','robo','estafa','violencia','corrupcion','delito','pena'],
+    resumen: 'El CP boliviano clasifica los delitos en dolosos y culposos, con penas de prision, multa y privacion de derechos. Incluye circunstancias atenuantes, agravantes y eximentes. La Ley 1970 (CPP) regula el proceso para juzgar estos delitos.',
+    articulos: [
+      { num: 'Art. 251', texto: 'El que matare a otro sera sancionado con presidio de cinco a veinte anos. Si el hecho fuere cometido con premeditacion, alevosía u otro agravante, la pena sera de quince a treinta anos.' },
+      { num: 'Art. 271', texto: 'El que con violencia o intimidacion en las personas o fuerza en las cosas se apoderare de cosa mueble ajena sera sancionado con privacion de libertad de uno a cinco anos.' },
+      { num: 'Art. 335', texto: 'El que con animo de lucro indujere en error a otro, mediante el empleo de artificios o enganos, y obtuviere para si o un tercero un beneficio ilicito, sera sancionado con privacion de libertad de uno a cinco anos.' },
+      { num: 'Art. 13', texto: 'Solo podra ser condenado el que hubiere cometido la accion u omision punible con conciencia y voluntad. Nadie sera condenado sin que haya tenido la oportunidad de ser escuchado en juicio.' },
+      { num: 'Art. 39', texto: 'Son circunstancias atenuantes generales: la buena conducta anterior, el arrepentimiento, obrar en estado de emocion violenta, ser menor de 21 anos, entre otras.' },
+      { num: 'Art. 23', texto: 'Es autor quien realiza el hecho punible por si solo, conjuntamente con otro, o por medio de otro del que se sirve como instrumento.' },
+    ]
+  },
+  {
+    id: 'cpp',
+    cat: 'penal',
+    ley: 'Ley 1970',
+    nombre: 'Codigo de Procedimiento Penal',
+    anio: '1999',
+    organismo: 'Congreso Nacional',
+    descripcion: 'Regula el proceso penal boliviano: denuncia, investigacion, imputacion, medidas cautelares, juicio oral y sentencia.',
+    tags: ['detencion preventiva','imputacion','juicio oral','medidas cautelares','denuncia','fiscal'],
+    resumen: 'El CPP establece el sistema acusatorio oral. El Ministerio Publico dirige la investigacion. Las medidas cautelares (detencion preventiva) solo proceden cuando existe peligro de fuga o de obstaculizacion. El juicio oral es publico y contradictorio.',
+    articulos: [
+      { num: 'Art. 7', texto: 'Nadie podra ser condenado a una pena ni sometido a una medida de seguridad sin juicio previo, realizado conforme a los principios de este Codigo.' },
+      { num: 'Art. 11', texto: 'Es inviolable la defensa en juicio. Toda persona tiene derecho a ser asistida por un abogado desde el primer acto del proceso.' },
+      { num: 'Art. 232', texto: 'La detencion preventiva procedera cuando concurran los requisitos de probabilidad de autoría y peligro de fuga u obstaculizacion de la investigacion.' },
+      { num: 'Art. 239', texto: 'La detencion preventiva cesara cuando hayan desaparecido los motivos que la fundaron o cuando su duracion exceda los plazos establecidos.' },
+      { num: 'Art. 134', texto: 'La duracion maxima de la etapa preparatoria es de 6 meses para delitos que no tengan detencion preventiva, y de 18 meses en caso de detencion preventiva.' },
+    ]
+  },
+  {
+    id: 'cc',
+    cat: 'civil',
+    ley: 'Decreto Ley 12760',
+    nombre: 'Codigo Civil Boliviano',
+    anio: '1976',
+    organismo: 'Gobierno de Bolivia',
+    descripcion: 'Regula las relaciones juridicas entre personas: contratos, obligaciones, derechos reales, propiedad, herencia y responsabilidad civil.',
+    tags: ['contrato','propiedad','herencia','prescripcion','obligacion','hipoteca'],
+    resumen: 'El CC boliviano organiza el derecho privado. Regula la persona (natural y juridica), la familia, los contratos (compraventa, arrendamiento, mutuo, donacion), los bienes inmuebles y muebles, la herencia ab intestato y testamentaria, y la responsabilidad civil extracontractual.',
+    articulos: [
+      { num: 'Art. 450', texto: 'Hay contrato cuando dos o mas personas se ponen de acuerdo para constituir, modificar o extinguir entre si una relacion juridica.' },
+      { num: 'Art. 584', texto: 'Por el contrato de compraventa el vendedor transfiere la propiedad de una cosa o un derecho al comprador, y este paga el precio.' },
+      { num: 'Art. 1492', texto: 'Los derechos se extinguen por la prescripcion cuando su titular no los ejercita durante el tiempo que la ley establece.' },
+      { num: 'Art. 999', texto: 'La propiedad es el poder juridico que permite usar, gozar y disponer de una cosa, y debe ejercerse en forma compatible con el interes colectivo.' },
+      { num: 'Art. 1000', texto: 'La propiedad se adquiere por ocupacion, accesion, usucapion, sucesion hereditaria, contrato y demas modos establecidos por ley.' },
+      { num: 'Art. 1098', texto: 'La usucapion es el modo de adquirir la propiedad y otros derechos reales mediante la posesion continuada, pacifica y publica durante el tiempo que establece la ley.' },
+    ]
+  },
+  {
+    id: 'codefam',
+    cat: 'familiar',
+    ley: 'Ley 603',
+    nombre: 'Codigo de las Familias y del Proceso Familiar',
+    anio: '2014',
+    organismo: 'Asamblea Legislativa Plurinacional',
+    descripcion: 'Regula el matrimonio, union libre, divorcio, filiacion, tuicion, adopcion y la asistencia familiar (pension de alimentos) en Bolivia.',
+    tags: ['divorcio','matrimonio','pension','tuicion','filiacion','adopcion','union libre'],
+    resumen: 'La Ley 603 modernizo el derecho familiar boliviano. Reconoce la union libre como equivalente al matrimonio tras dos anos de convivencia. Establece el divorcio por mutuo acuerdo o por causa (violencia, abandono, adulterio). La asistencia familiar cubre alimentos, educacion y salud de los hijos.',
+    articulos: [
+      { num: 'Art. 3', texto: 'La familia es el nucleo fundamental de la sociedad. El Estado la protege y reconoce como base de la organizacion social.' },
+      { num: 'Art. 167', texto: 'El divorcio procede por mutuo acuerdo o a demanda de uno de los conyuges cuando el matrimonio se haya roto de manera objetiva y definitiva.' },
+      { num: 'Art. 204', texto: 'La asistencia familiar comprende todo lo indispensable para el sustento, habitacion, vestido, educacion, instruccion y salud.' },
+      { num: 'Art. 213', texto: 'La obligacion de asistencia familiar se establece en proporcion a las necesidades del que la pide y los medios economicos del que debe darla.' },
+      { num: 'Art. 215', texto: 'El incumplimiento de la asistencia familiar es delito y da lugar a la accion penal correspondiente.' },
+      { num: 'Art. 64', texto: 'Las uniones libres o de hecho que renan las condiciones de estabilidad y singularidad, mantenidas entre mujer y hombre sin impedimento legal, producen los mismos efectos que el matrimonio civil.' },
+    ]
+  },
+  {
+    id: 'ley348',
+    cat: 'familiar',
+    ley: 'Ley 348',
+    nombre: 'Ley Integral para Garantizar a las Mujeres una Vida Libre de Violencia',
+    anio: '2013',
+    organismo: 'Asamblea Legislativa Plurinacional',
+    descripcion: 'Establece mecanismos de proteccion y prevencion contra la violencia hacia la mujer. Define tipos de violencia y crea el SLIM y casas de acogida.',
+    tags: ['violencia','feminicidio','proteccion','SLIM','medida de proteccion','genero'],
+    resumen: 'La Ley 348 tipifica el feminicidio con pena de 30 anos sin derecho a indulto. Reconoce 16 formas de violencia (fisica, psicologica, sexual, economica, etc.). Crea el SLIM (Servicio Legal Integral Municipal) como primera instancia de atencion gratuita para mujeres victimas de violencia.',
+    articulos: [
+      { num: 'Art. 7', texto: 'Se reconocen formas de violencia: fisica, feminicida, psicologica, economica y patrimonial, sexual, reproductiva, institucional, laboral, simbolica y politica.' },
+      { num: 'Art. 21', texto: 'El feminicidio sera sancionado con la pena de treinta anos sin derecho a indulto.' },
+      { num: 'Art. 35', texto: 'Los servicios integrados de atencion a mujeres en situacion de violencia son: SLIM, DNA, Ministerio Publico, Policia Boliviana y el sistema de salud.' },
+      { num: 'Art. 54', texto: 'Las medidas de proteccion son de aplicacion inmediata. La autoridad policial o judicial las dictara sin dilacion y podra ordenar el alejamiento del agresor del domicilio.' },
+    ]
+  },
+  {
+    id: 'cocom',
+    cat: 'comercial',
+    ley: 'Decreto Ley 14379',
+    nombre: 'Codigo de Comercio Boliviano',
+    anio: '1977',
+    organismo: 'Gobierno de Bolivia',
+    descripcion: 'Regula los actos de comercio, empresas, sociedades comerciales (SRL, SA), contratos mercantiles, titulos valores y quiebra.',
+    tags: ['SRL','SA','FUNDEMPRESA','titulos valores','quiebra','comerciante','sociedad'],
+    resumen: 'El Codigo de Comercio regula la actividad empresarial en Bolivia. Define los tipos de sociedades: SRL (min. 2 socios, responsabilidad limitada al capital), SA (acciones transables). Todas las empresas deben registrarse en FUNDEMPRESA. Incluye la Ley de Quiebras y el regimen de titulos valores (cheque, letra de cambio, pagare).',
+    articulos: [
+      { num: 'Art. 195', texto: 'La sociedad de responsabilidad limitada es aquella que se constituye entre socios que son responsables hasta el monto de sus aportes al capital.' },
+      { num: 'Art. 217', texto: 'La sociedad anonima es aquella en que el capital esta dividido en acciones y la responsabilidad de los socios se limita al valor de sus acciones.' },
+      { num: 'Art. 492', texto: 'El cheque es un titulo valor por el que el girador ordena al banco girado el pago de una suma determinada en favor del beneficiario.' },
+      { num: 'Art. 535', texto: 'La letra de cambio es un titulo valor que incorpora la obligacion de pagar una suma de dinero en el lugar y fecha indicados.' },
+    ]
+  },
+  {
+    id: 'lpa',
+    cat: 'administrativo',
+    ley: 'Ley 2341',
+    nombre: 'Ley de Procedimiento Administrativo',
+    anio: '2002',
+    organismo: 'Congreso Nacional',
+    descripcion: 'Establece los principios, plazos y recursos del procedimiento administrativo en toda la administracion publica boliviana.',
+    tags: ['recurso','revocatoria','jerarquico','acto administrativo','silencio','plazo'],
+    resumen: 'La Ley 2341 regula como actua la administracion publica. Establece principios de legalidad, debido proceso, publicidad y eficacia. Define los actos administrativos (resolucion, decreto, auto), los recursos (revocatoria ante la misma autoridad y jerarquico ante el superior), y el silencio administrativo positivo.',
+    articulos: [
+      { num: 'Art. 2', texto: 'Las normas del procedimiento administrativo se aplican a todos los organos de la administracion publica, central, departamental y municipal.' },
+      { num: 'Art. 4', texto: 'Son principios del procedimiento administrativo: legalidad, impulso de oficio, publicidad, buena fe, imparcialidad y eficacia.' },
+      { num: 'Art. 57', texto: 'El recurso de revocatoria se interpondra ante la misma autoridad que dicto el acto en un plazo de 10 dias hábiles desde su notificacion.' },
+      { num: 'Art. 65', texto: 'El recurso jerarquico se interpondra ante el inmediato superior de la autoridad que dicto el acto en un plazo de 10 dias hábiles desde la notificacion de la resolucion revocatoria.' },
+      { num: 'Art. 64', texto: 'Si la autoridad no resolviere el recurso de revocatoria en el plazo de 60 dias hábiles, el silencio administrativo tendra efecto negativo, pudiendo el interesado interponer recurso jerarquico.' },
+    ]
+  },
+  {
+    id: 'safco',
+    cat: 'administrativo',
+    ley: 'Ley 1178',
+    nombre: 'Ley SAFCO — Administracion y Control Gubernamentales',
+    anio: '1990',
+    organismo: 'Congreso Nacional',
+    descripcion: 'Regula la administracion de recursos del Estado y la responsabilidad de los servidores publicos por el uso de fondos publicos.',
+    tags: ['responsabilidad','servidor publico','contraloria','auditoria','NB-SABS','fondos publicos'],
+    resumen: 'La Ley SAFCO establece la responsabilidad por la funcion publica en cuatro tipos: ejecutiva, administrativa, civil y penal. El servidor publico que cause dano al Estado responde con su patrimonio personal. La Contraloria General del Estado fiscaliza el uso de los recursos publicos.',
+    articulos: [
+      { num: 'Art. 28', texto: 'Son tipos de responsabilidad por la funcion publica: ejecutiva, administrativa, civil y penal. Estas responsabilidades son independientes unas de otras.' },
+      { num: 'Art. 31', texto: 'Todo servidor publico respondera de los resultados emergentes del desempeno de las funciones, deberes y atribuciones asignados a su cargo.' },
+      { num: 'Art. 77', texto: 'La Contraloria General del Estado es la institucion tecnica que ejerce la funcion de control de la administracion de las entidades publicas.' },
+    ]
+  },
+  {
+    id: 'inra',
+    cat: 'agrario',
+    ley: 'Ley 1715',
+    nombre: 'Ley del Servicio Nacional de Reforma Agraria (INRA)',
+    anio: '1996',
+    organismo: 'Congreso Nacional',
+    descripcion: 'Regula la distribucion, redistribucion y titulacion de tierras en Bolivia. Establece la Funcion Economico Social (FES) y el saneamiento.',
+    tags: ['saneamiento','titulacion','FES','INRA','tierra','comunidad','propiedad agraria'],
+    resumen: 'La Ley INRA garantiza el derecho propietario de la tierra condicionado al cumplimiento de la Funcion Economico Social (FES). El proceso de saneamiento verifica si la tierra cumple la FES; si no, puede ser revertida al Estado. La Ley 3545 de 2006 profundizo la reconduccion comunitaria beneficiando a comunidades indigenas.',
+    articulos: [
+      { num: 'Art. 2', texto: 'La funcion economico social (FES) en materia agraria es el empleo sostenible de la tierra en el desarrollo de actividades agropecuarias, forestales y otras de caracter productivo.' },
+      { num: 'Art. 64', texto: 'El saneamiento es el proceso tecnico-juridico transitorio destinado a regularizar y perfeccionar el derecho de propiedad agraria.' },
+      { num: 'Art. 3', texto: 'El solar campesino, la pequena propiedad y las tierras comunitarias de origen son indivisibles, indistribuibles, inembargables, inalienables e imprescriptibles.' },
+    ]
+  },
+  {
+    id: 'ley065',
+    cat: 'social',
+    ley: 'Ley 065',
+    nombre: 'Ley de Pensiones',
+    anio: '2010',
+    organismo: 'Asamblea Legislativa Plurinacional',
+    descripcion: 'Regula el sistema de pensiones de Bolivia: jubilacion, invalidez, sobrevivencia y la Pension Solidaria. Sustituyo el sistema de AFP.',
+    tags: ['jubilacion','pension','AFP','SIP','renta','vejez','invalidez'],
+    resumen: 'La Ley 065 creo el Sistema Integral de Pensiones (SIP) administrado por la Gestora Publica. Los trabajadores aportan el 10% de su salario. La jubilacion ordinaria es a los 58 anos con 120 meses de aportes o a los 55 anos para trabajos de riesgo. La Renta Dignidad (Bs 3.000/ano) beneficia a todos los bolivianos mayores de 60 anos.',
+    articulos: [
+      { num: 'Art. 29', texto: 'Los asegurados tienen derecho a la jubilacion ordinaria a los 58 anos de edad habiendo acumulado al menos 120 periodos de contribucion.' },
+      { num: 'Art. 50', texto: 'La Pension por Invalidez procede cuando el asegurado pierde el 60% o mas de su capacidad laboral permanentemente.' },
+      { num: 'Art. 67', texto: 'La Renta Dignidad es una pension vitalicia del Estado boliviano para todas las personas mayores de 60 anos que no perciban Renta del Servicio Nacional del Sistema de Reparto.' },
+    ]
+  },
+  {
+    id: 'ley370',
+    cat: 'social',
+    ley: 'Ley 370',
+    nombre: 'Ley de Migracion',
+    anio: '2013',
+    organismo: 'Asamblea Legislativa Plurinacional',
+    descripcion: 'Regula la entrada, permanencia y salida de extranjeros en Bolivia y la proteccion de los bolivianos en el exterior.',
+    tags: ['migracion','residencia','extranjero','visa','naturalizacion','refugio'],
+    resumen: 'La Ley 370 establece los derechos y obligaciones de los migrantes en Bolivia. Define las categorias de residencia (temporaria y permanente), el proceso de naturalizacion, la proteccion a refugiados y la prohibicion de expulsiones colectivas.',
+    articulos: [
+      { num: 'Art. 5', texto: 'Los migrantes tienen los mismos derechos civiles que los nacionales, con excepcion de los derechos politicos reservados por la CPE.' },
+      { num: 'Art. 30', texto: 'La residencia permanente se otorga a los extranjeros que hayan residido legalmente en Bolivia por dos anos continuos.' },
+      { num: 'Art. 44', texto: 'Ninguna persona sera expulsada del territorio nacional sin un debido proceso previo que garantice el derecho a la defensa.' },
+    ]
+  }
+];
+
+// ══════════════════════════════════════════════════════
+//  BIBLIOTECA — Logica
+// ══════════════════════════════════════════════════════
+let libInitialized = false;
+let libCurrentCat  = 'todos';
+let libSearchQuery = '';
+let libSelectedId  = null;
+
+function initLib() {
+  libInitialized = true;
+  libRenderList();
+}
+
+function libGetFiltered() {
+  return BIBLIOTECA.filter(n => {
+    const matchCat = libCurrentCat === 'todos' || n.cat === libCurrentCat;
+    if (!libSearchQuery) return matchCat;
+    const q = libSearchQuery.toLowerCase();
+    return matchCat && (
+      n.nombre.toLowerCase().includes(q) ||
+      n.ley.toLowerCase().includes(q) ||
+      n.descripcion.toLowerCase().includes(q) ||
+      n.tags.some(t => t.toLowerCase().includes(q)) ||
+      n.resumen.toLowerCase().includes(q)
+    );
+  });
+}
+
+function libRenderList() {
+  const list = document.getElementById('lib-list');
+  const items = libGetFiltered();
+  if (!items.length) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);font-size:12.5px">Sin resultados</div>';
+    return;
+  }
+  list.innerHTML = items.map(n => `
+    <div class="lib-item${libSelectedId === n.id ? ' active' : ''}" onclick="libSelectItem('${n.id}')">
+      <div class="lib-item-law">${n.ley}</div>
+      <div class="lib-item-name">${n.nombre}</div>
+      <div class="lib-item-desc">${n.descripcion}</div>
+    </div>`).join('');
+}
+
+function libSelectCat(btn) {
+  document.querySelectorAll('.lib-cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  libCurrentCat = btn.dataset.cat;
+  libSelectedId = null;
+  document.getElementById('lib-detail').innerHTML = `
+    <div class="lib-detail-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      <p>Selecciona una norma<br>para ver su contenido</p>
+    </div>`;
+  libRenderList();
+}
+
+function libSelectItem(id) {
+  libSelectedId = id;
+  libRenderList();
+  const norma = BIBLIOTECA.find(n => n.id === id);
+  if (!norma) return;
+
+  const artsHtml = norma.articulos.map(a => `
+    <div class="art-card">
+      <div class="art-card-num">${a.num}</div>
+      <div class="art-card-text">${a.texto}</div>
+    </div>`).join('');
+
+  const tagsHtml = norma.tags.map(t =>
+    `<span class="lib-tag" onclick="consultarEnChat('${t.replace(/'/g,"\\'")}', '${norma.nombre.replace(/'/g,"\\'")}' )">${t}</span>`
+  ).join('');
+
+  document.getElementById('lib-detail').innerHTML = `
+    <div class="lib-detail-header">
+      <div class="lib-detail-law">${norma.ley} · ${norma.anio}</div>
+      <div class="lib-detail-title">${norma.nombre}</div>
+      <div class="lib-detail-meta">
+        <span>${norma.organismo}</span>
+      </div>
+      <button class="lib-ask-btn" onclick="consultarEnChat('${norma.nombre.replace(/'/g,"\\'")}', '')">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Consultar al asistente
+      </button>
+    </div>
+
+    <div class="lib-section">
+      <div class="lib-section-title">Resumen</div>
+      <p>${norma.resumen}</p>
+    </div>
+
+    <div class="lib-section">
+      <div class="lib-section-title">Articulos clave</div>
+      <div class="arts-grid">${artsHtml}</div>
+    </div>
+
+    <div class="lib-section">
+      <div class="lib-section-title">Temas relacionados — haz clic para consultar</div>
+      <div class="lib-tags">${tagsHtml}</div>
+    </div>`;
+}
+
+function libSearch(q) {
+  libSearchQuery = q.trim();
+  libSelectedId  = null;
+  libRenderList();
+}
+
+function consultarEnChat(tema, norma) {
+  const pregunta = norma ? `Necesito informacion sobre "${norma}": ${tema}` : `Necesito informacion sobre: ${tema}`;
+  switchView('chat');
+  inputEl.value = pregunta;
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 110) + 'px';
+  inputEl.focus();
+}
 </script>
 </body>
 </html>
