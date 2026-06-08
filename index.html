@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asesor Jurídico Bolivia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue-dark: #0C2D4E;
+    --blue-mid: #185FA5;
+    --blue-light: #E6F1FB;
+    --gold: #C8991A;
+    --gold-light: #FFF8E7;
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --border: rgba(0,0,0,0.09);
+    --text: #1A1A1A;
+    --text-muted: #6B6B6B;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 80% 10%, rgba(24,95,165,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 10% 90%, rgba(200,153,26,0.07) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 780px;
+  }
+
+  #top-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding: 0 4px;
+  }
+
+  #top-header .logo-mark {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--blue-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  #top-header .logo-mark svg {
+    width: 26px;
+    height: 26px;
+    fill: var(--gold);
+  }
+
+  #top-header .brand h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--blue-dark);
+    line-height: 1.1;
+  }
+
+  #top-header .brand p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    letter-spacing: 0.02em;
+  }
+
+  #top-header .badge {
+    margin-left: auto;
+    background: var(--gold-light);
+    border: 1px solid rgba(200,153,26,0.3);
+    color: #7A5A00;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  #app {
+    background: var(--surface);
+    border-radius: 20px;
+    border: 0.5px solid var(--border);
+    box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    height: 620px;
+    overflow: hidden;
+  }
+
+  #area-bar {
+    display: flex;
+    gap: 6px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
+    background: #FAFAFA;
+    scrollbar-width: none;
+  }
+  #area-bar::-webkit-scrollbar { display: none; }
+
+  .area-btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 12.5px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+    font-weight: 400;
+  }
+
+  .area-btn:hover {
+    background: var(--blue-light);
+    border-color: rgba(24,95,165,0.3);
+    color: var(--blue-mid);
+  }
+
+  .area-btn.active {
+    background: var(--blue-dark);
+    border-color: var(--blue-dark);
+    color: #ffffff;
+    font-weight: 500;
+  }
+
+  .area-btn .icon { font-size: 14px; line-height: 1; }
+
+  #messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+  }
+
+  #messages::-webkit-scrollbar { width: 4px; }
+  #messages::-webkit-scrollbar-track { background: transparent; }
+  #messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .msg {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 80%;
+    animation: fadeUp 0.25s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.user { align-self: flex-end; }
+  .msg.bot { align-self: flex-start; }
+
+  .area-tag {
+    font-size: 11px;
+    color: var(--gold);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    margin-bottom: 1px;
+  }
+
+  .bubble {
+    padding: 11px 15px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  .msg.user .bubble {
+    background: var(--blue-dark);
+    color: #E8F0F8;
+    border-bottom-right-radius: 4px;
+  }
+
+  .msg.bot .bubble {
+    background: #F4F4F2;
+    color: var(--text);
+    border-bottom-left-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .msg .ts { font-size: 10.5px; color: #BDBDBD; }
+  .msg.user .ts { text-align: right; }
+
+  .typing-wrap { align-self: flex-start; }
+  .typing {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 12px 16px;
+    background: #F4F4F2;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    border-bottom-left-radius: 4px;
+    width: fit-content;
+  }
+
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #BDBDBD;
+    animation: bounce 1.2s infinite;
+  }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%,60%,100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+  }
+
+  #chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 8px 16px 4px;
+  }
+
+  .chip {
+    font-size: 12px;
+    padding: 5px 11px;
+    border-radius: 20px;
+    background: var(--gold-light);
+    border: 1px solid rgba(200,153,26,0.25);
+    color: #7A5A00;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .chip:hover {
+    background: #FDEFC0;
+    border-color: rgba(200,153,26,0.5);
+  }
+
+  #input-area {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    background: #FAFAFA;
+  }
+
+  #user-input {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    resize: none;
+    min-height: 42px;
+    max-height: 100px;
+    background: var(--surface);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    line-height: 1.5;
+  }
+
+  #user-input:focus {
+    border-color: var(--blue-mid);
+    box-shadow: 0 0 0 3px rgba(24,95,165,0.08);
+  }
+
+  #user-input::placeholder { color: #C0C0C0; }
+
+  #send-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--blue-dark);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  #send-btn:hover { background: var(--blue-mid); }
+  #send-btn:active { transform: scale(0.94); }
+  #send-btn:disabled { background: #D0D0D0; cursor: not-allowed; }
+
+  #send-btn svg {
+    width: 18px; height: 18px;
+    fill: none;
+    stroke: white;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  #footer {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 11px;
+    color: #BDBDBD;
+    padding: 0 4px;
+  }
+
+  @media (max-width: 520px) {
+    body { padding: 10px; }
+    #app { height: 85vh; border-radius: 14px; }
+    #top-header .badge { display: none; }
+    .msg { max-width: 90%; }
+    #top-header .brand h1 { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="wrapper">
+  <div id="top-header">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/>
+      </svg>
+    </div>
+    <div class="brand">
+      <h1>Asesor Jurídico Bolivia</h1>
+      <p>Sistema de orientación legal · Estado Plurinacional</p>
+    </div>
+    <span class="badge">⚖ Derecho Boliviano</span>
+  </div>
+
+  <div id="app">
+    <div id="area-bar">
+      <button class="area-btn active" data-area="general" onclick="setArea(this)"><span class="icon">📚</span> General</button>
+      <button class="area-btn" data-area="laboral" onclick="setArea(this)"><span class="icon">💼</span> Laboral</button>
+      <button class="area-btn" data-area="penal" onclick="setArea(this)"><span class="icon">🛡</span> Penal</button>
+      <button class="area-btn" data-area="civil" onclick="setArea(this)"><span class="icon">📄</span> Civil</button>
+      <button class="area-btn" data-area="familiar" onclick="setArea(this)"><span class="icon">🏠</span> Familiar</button>
+      <button class="area-btn" data-area="comercial" onclick="setArea(this)"><span class="icon">🏪</span> Comercial</button>
+      <button class="area-btn" data-area="constitucional" onclick="setArea(this)"><span class="icon">🏛</span> Constitucional</button>
+      <button class="area-btn" data-area="administrativo" onclick="setArea(this)"><span class="icon">🏢</span> Administrativo</button>
+      <button class="area-btn" data-area="agrario" onclick="setArea(this)"><span class="icon">🌿</span> Agrario</button>
+    </div>
+
+    <div id="messages">
+      <div class="msg bot">
+        <div class="bubble">¡Bienvenido al Asesor Jurídico Boliviano! 🇧🇴
+
+Puedo orientarte en múltiples áreas del derecho boliviano. Selecciona el área legal en la barra superior para obtener respuestas más precisas, o escribe tu consulta directamente.
+
+⚠️ Esta orientación es informativa y no reemplaza a un abogado profesional habilitado en Bolivia.</div>
+        <span class="ts" id="welcome-ts"></span>
+      </div>
+    </div>
+
+    <div id="chips"></div>
+
+    <div id="input-area">
+      <textarea id="user-input" placeholder="Escribe tu consulta legal..." rows="1"></textarea>
+      <button id="send-btn" onclick="sendMessage()" title="Enviar">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="footer">
+    Orientación informativa · No constituye asesoramiento legal oficial · Consulta siempre con un abogado habilitado
+  </div>
+</div>
+
+<script>
+const API_KEY = 'TU_GROQ_API_KEY_AQUI';
+
+const AREAS = {
+  general: {
+    label: 'Derecho General',
+    system: 'Eres un asistente jurídico general especializado en toda la legislación boliviana. Orientas sobre cualquier rama del derecho: civil, penal, laboral, familiar, comercial, constitucional y más. Cita normas específicas bolivianas.',
+    chips: ['¿Cómo inicio un proceso legal?', '¿Dónde acudo si vulneran mis derechos?', '¿Qué es el SEPREC?']
+  },
+  laboral: {
+    label: 'Derecho Laboral',
+    system: 'Eres un experto en derecho laboral boliviano. Conoces la Ley General del Trabajo (LGT), el Decreto Reglamentario, Ley 321, normativas del Ministerio de Trabajo, beneficios sociales (aguinaldo, desahucio, indemnización), contratos laborales, jornadas, salario mínimo, despido injustificado, inamovilidad laboral y sindicatos en Bolivia. Cita artículos específicos.',
+    chips: ['¿Cuánto es el desahucio?', '¿Me pueden despedir sin causa?', 'Inamovilidad por maternidad', '¿Cómo cobro mis beneficios sociales?']
+  },
+  penal: {
+    label: 'Derecho Penal',
+    system: 'Eres un experto en derecho penal boliviano. Conoces el Código Penal (Ley 1768 y modificaciones), el Código de Procedimiento Penal (Ley 1970), tipos penales, penas, medidas cautelares, detención preventiva, delitos contra la vida, propiedad, honor, familia y función pública en Bolivia. Cita artículos del CP y CPP boliviano.',
+    chips: ['¿Qué es la detención preventiva?', 'Delitos contra la propiedad', '¿Cómo presento una denuncia?', 'Violencia intrafamiliar']
+  },
+  civil: {
+    label: 'Derecho Civil',
+    system: 'Eres un experto en derecho civil boliviano. Conoces el Código Civil boliviano (Decreto Ley 12760), contratos, obligaciones, derechos reales, sucesiones, prescripción, personas jurídicas y naturales, responsabilidad civil y propiedad en Bolivia.',
+    chips: ['¿Cómo funciona una herencia?', 'Contratos de compraventa', '¿Qué es la prescripción?', 'Derechos de propiedad']
+  },
+  familiar: {
+    label: 'Derecho de Familia',
+    system: 'Eres un experto en derecho familiar boliviano. Conoces el Código de las Familias y del Proceso Familiar (Ley 603), matrimonio, divorcio, unión libre, filiación, adopción, asistencia familiar (pensión de alimentos), tuición, violencia familiar y la Ley 348 integral para garantizar a las mujeres una vida libre de violencia.',
+    chips: ['Proceso de divorcio', '¿Cómo pido pensión de alimentos?', 'Tuición de hijos', 'Unión libre en Bolivia']
+  },
+  comercial: {
+    label: 'Derecho Comercial',
+    system: 'Eres un experto en derecho comercial y empresarial boliviano. Conoces el Código de Comercio boliviano (Decreto Ley 14379), registro de empresas en FUNDEMPRESA, tipos societarios (SRL, SA, empresa unipersonal), contratos mercantiles, títulos valores, quiebra y concurso de acreedores en Bolivia.',
+    chips: ['¿Cómo registro una empresa?', 'Diferencia SRL y SA', 'Contratos mercantiles', '¿Qué es FUNDEMPRESA?']
+  },
+  constitucional: {
+    label: 'Derecho Constitucional',
+    system: 'Eres un experto en derecho constitucional boliviano. Conoces la Constitución Política del Estado Plurinacional de Bolivia (2009), derechos fundamentales, garantías constitucionales, acción de amparo, acción de libertad (habeas corpus), acción de cumplimiento, acción popular, estructura del Estado, autonomías y el Tribunal Constitucional Plurinacional.',
+    chips: ['¿Qué es la acción de amparo?', 'Mis derechos constitucionales', 'Acción de libertad (habeas corpus)', 'Autonomías departamentales']
+  },
+  administrativo: {
+    label: 'Derecho Administrativo',
+    system: 'Eres un experto en derecho administrativo boliviano. Conoces la Ley 2341 de Procedimiento Administrativo, la Ley SAFCO, contrataciones estatales (SICOES), función pública, responsabilidad del Estado, recursos administrativos, contraloría y normativa de la administración pública boliviana.',
+    chips: ['Recurso administrativo', '¿Cómo contrato con el Estado?', 'Responsabilidad de funcionarios', 'SICOES y contrataciones']
+  },
+  agrario: {
+    label: 'Derecho Agrario',
+    system: 'Eres un experto en derecho agrario y tierras en Bolivia. Conoces la Ley 1715 del INRA, Ley 3545 de Reconducción Comunitaria, saneamiento de tierras, titulación, función económico social (FES), comunidades campesinas, pueblos indígenas originario campesinos y el régimen de propiedad agraria en Bolivia.',
+    chips: ['¿Cómo titulo mi terreno?', 'Función económico social', 'Saneamiento de tierras', 'Derechos de comunidades indígenas']
+  }
+};
+
+let currentArea = 'general';
+let history = [];
+
+const msgsEl = document.getElementById('messages');
+const inputEl = document.getElementById('user-input');
+const btnEl = document.getElementById('send-btn');
+const chipsEl = document.getElementById('chips');
+
+document.getElementById('welcome-ts').textContent = now();
+
+function now() {
+  const d = new Date();
+  return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+}
+
+function setArea(btn) {
+  document.querySelectorAll('.area-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentArea = btn.dataset.area;
+  renderChips(AREAS[currentArea].chips);
+}
+
+function renderChips(list) {
+  chipsEl.innerHTML = '';
+  list.forEach(c => {
+    const el = document.createElement('span');
+    el.className = 'chip';
+    el.textContent = c;
+    el.onclick = () => { inputEl.value = c; sendMessage(); };
+    chipsEl.appendChild(el);
+  });
+}
+
+function addMsg(role, text, areaLabel) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+
+  if (role === 'bot' && areaLabel) {
+    const tag = document.createElement('div');
+    tag.className = 'area-tag';
+    tag.textContent = '⚖ ' + areaLabel;
+    div.appendChild(tag);
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = text;
+
+  const ts = document.createElement('span');
+  ts.className = 'ts';
+  ts.textContent = now();
+
+  div.appendChild(bubble);
+  div.appendChild(ts);
+  msgsEl.appendChild(div);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg bot typing-wrap';
+  div.id = 'typing-indicator';
+  div.innerHTML = '<div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+  msgsEl.appendChild(div);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
+
+async function sendMessage() {
+  const text = inputEl.value.trim();
+  if (!text) return;
+
+  chipsEl.innerHTML = '';
+  inputEl.value = '';
+  inputEl.style.height = 'auto';
+  btnEl.disabled = true;
+
+  addMsg('user', text);
+  history.push({ role: 'user', content: text });
+  showTyping();
+
+  const area = AREAS[currentArea];
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + API_KEY
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 1000,
+        messages: [
+          { role: 'system', content: area.system + '\n\nResponde siempre en español boliviano claro y accesible para personas sin formación jurídica. Cita artículos y normas específicas cuando sea relevante. Sé conciso (máximo 4 párrafos). Aclara siempre que tu orientación es informativa y no reemplaza a un abogado profesional habilitado en Bolivia.' },
+          ...history
+        ]
+      })
+    });
+
+    const data = await res.json();
+    removeTyping();
+
+    const reply = data.choices?.[0]?.message?.content || 'Lo siento, no pude generar una respuesta. Intenta de nuevo.';
+    history.push({ role: 'assistant', content: reply });
+
+    addMsg('bot', reply, area.label);
+
+  } catch(e) {
+    removeTyping();
+    addMsg('bot', 'Error de conexión con el servidor. Verifica tu API Key y conexión a internet.');
+  }
+
+  btnEl.disabled = false;
+  inputEl.focus();
+}
+
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+inputEl.addEventListener('input', () => {
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 100) + 'px';
+});
+
+renderChips(AREAS.general.chips);
+</script>
+</body>
+</html>
