@@ -1327,13 +1327,16 @@
 
         <div class="pay-manual-details show" id="pay-manual-details">
           <h4>Datos de pago</h4>
-          <div class="pay-detail-row"><span>Banco</span><strong>Banco Union S.A.</strong></div>
-          <div class="pay-detail-row"><span>Titular</span><strong>LexBolivia S.R.L.</strong></div>
-          <div class="pay-detail-row"><span>Cuenta</span><strong>1-6123456-01</strong></div>
-          <div class="pay-detail-row"><span>Monto</span><strong id="pm-monto">Bs 0</strong></div>
+          <div class="pay-detail-row"><span>Banco</span><strong>Banco Mercantil Santa Cruz</strong></div>
+          <div class="pay-detail-row"><span>Titular</span><strong>Kevin Bermudez Loza</strong></div>
+          <div class="pay-detail-row"><span>Nro. de cuenta</span><strong>2000123456</strong></div>
+          <div class="pay-detail-row"><span>Cuenta de ahorros</span><strong>Bs (Bolivianos)</strong></div>
+          <div class="pay-detail-row"><span>CI titular</span><strong>7845123 SC</strong></div>
+          <div class="pay-detail-row"><span>Referencia</span><strong id="pm-referencia">LEX-000000</strong></div>
+          <div class="pay-detail-row"><span>Monto exacto</span><strong id="pm-monto">Bs 0</strong></div>
           <div class="pay-qr">
-            <div class="pay-qr-box">QR disponible proxImamente</div>
-            <p>Escanea con tu app bancaria o transfiere manualmente</p>
+            <div class="pay-qr-box">QR disponible proximamente</div>
+            <p>Transfiere el monto exacto e indica tu correo como referencia</p>
           </div>
         </div>
       </div>
@@ -2708,12 +2711,14 @@ let selectedPlanModal = null;
 function openPlansModal() {
   const modal = document.getElementById('plans-modal');
   modal.classList.add('open');
-  // Actualizar plan actual
   if (userPlanData) {
     document.getElementById('pm-current-plan').textContent = PLAN_NAMES_MODAL[userPlanData.plan] || userPlanData.plan.charAt(0).toUpperCase() + userPlanData.plan.slice(1);
     const lim = userPlanData.limit === Infinity ? '∞' : userPlanData.limit;
     document.getElementById('pm-current-msgs').textContent = `${userPlanData.messagesUsed} / ${lim} mensajes`;
   }
+  // Codigo de referencia unico por usuario
+  const refCode = 'LEX-' + (currentUser?.uid?.slice(0,6) || '000000').toUpperCase();
+  document.getElementById('pm-referencia').textContent = refCode;
   selectedPlanModal = null;
   document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
   document.getElementById('pay-confirm-btn').disabled = true;
