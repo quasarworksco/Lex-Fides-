@@ -648,7 +648,10 @@ Esta orientacion es de caracter informativo y no sustituye el asesoramiento de u
 </div>
 
 <script>
-const API_KEY = 'TU_GROQ_API_KEY_AQUI';
+// URL del backend - cambia esto a tu URL de produccion cuando despliegues
+const BACKEND_URL = 'http://localhost:3000';
+
+let sessionId = null;
 
 const AREAS = {
   general: {
@@ -712,6 +715,18 @@ const toggleBtn = document.getElementById('area-toggle-btn');
 const overlay = document.getElementById('overlay');
 
 document.getElementById('welcome-ts').textContent = now();
+
+// Iniciar sesion en el backend
+async function initSession() {
+  try {
+    const res = await fetch(BACKEND_URL + '/api/session', { method: 'POST' });
+    const data = await res.json();
+    sessionId = data.sessionId;
+  } catch (e) {
+    console.warn('No se pudo conectar al backend, modo sin registro activo');
+  }
+}
+initSession();
 
 function now() {
   const d = new Date();
@@ -852,32 +867,31 @@ async function sendMessage() {
   const area = AREAS[currentArea];
 
   try {
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    const res = await fetch(BACKEND_URL + '/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + API_KEY
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: 1200,
-        messages: [
-          { role: 'system', content: buildSystemPrompt(area) },
-          ...getHistory()
-        ]
+        sessionId: sessionId,
+        area: currentArea,
+        message: text,
+        history: getHistory()
       })
     });
 
     const data = await res.json();
     removeTyping();
 
-    const reply = data.choices?.[0]?.message?.content || 'No se pudo generar una respuesta. Intente nuevamente.';
-    history.push({ role: 'assistant', content: reply });
-    addMsg('bot', reply, area.label);
+    if (!res.ok) {
+      addMsg('bot', 'Error del servidor. Intente nuevamente.');
+    } else {
+      const reply = data.reply || 'No se pudo generar una respuesta.';
+      history.push({ role: 'assistant', content: reply });
+      addMsg('bot', reply, area.label);
+    }
 
   } catch(e) {
     removeTyping();
-    addMsg('bot', 'Error de conexion. Verifique su API Key e intente nuevamente.');
+    addMsg('bot', 'Error de conexion. Verifique que el servidor este activo.');
   }
 
   btnEl.disabled = false;
