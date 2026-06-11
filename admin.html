@@ -1,1 +1,1246 @@
-placeholder
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lex Fides Abogados - Panel de Administracion</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:       #0A1F3C;
+    --navy-mid:   #143260;
+    --navy-light: #1B4080;
+    --gold:       #B8860B;
+    --gold-bright:#D4A017;
+    --gold-pale:  #FBF4DC;
+    --bg:         #F0EEE8;
+    --surface:    #FFFFFF;
+    --surface-alt:#F7F6F2;
+    --border:     rgba(10,31,60,0.09);
+    --text:       #0D1B2A;
+    --text-muted: #7A8A9A;
+    --green:      #16A34A;
+    --red:        #DC2626;
+    --amber:      #D97706;
+    --purple:     #7C3AED;
+    --radius:     16px;
+    --radius-sm:  10px;
+    --shadow:     0 4px 24px rgba(10,31,60,0.09);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  header {
+    background: var(--navy);
+    padding: 0 32px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 2px 20px rgba(10,31,60,0.25);
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .logo-mark {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 10px rgba(184,134,11,0.4);
+  }
+  .logo-mark svg { width: 22px; height: 22px; fill: var(--navy); }
+  .header-title { font-family: 'Libre Baskerville', serif; font-size: 18px; color: #fff; }
+  .header-sub { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .live-badge {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(22,163,74,0.15); border: 1px solid rgba(22,163,74,0.3);
+    border-radius: 20px; padding: 5px 13px;
+  }
+  .live-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ADE80; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 2px rgba(74,222,128,0.2); }
+    50%      { box-shadow: 0 0 0 5px rgba(74,222,128,0.08); }
+  }
+  .live-badge span { font-size: 11px; color: #4ADE80; font-weight: 600; letter-spacing: 0.05em; }
+
+  /* NAV TABS */
+  .nav-tabs {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 32px; display: flex; gap: 0;
+  }
+  .nav-tab {
+    padding: 14px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted);
+    cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.18s;
+    white-space: nowrap;
+  }
+  .nav-tab:hover { color: var(--navy); }
+  .nav-tab.active { color: var(--navy); border-bottom-color: var(--navy); font-weight: 600; }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* MAIN */
+  main { max-width: 1280px; margin: 0 auto; padding: 28px 24px 48px; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 14px; font-weight: 600; color: var(--navy);
+    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .pill {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+    background: var(--navy); color: #fff;
+    border-radius: 10px; padding: 2px 8px; text-transform: uppercase;
+  }
+  .pill.green { background: var(--green); }
+  .pill.amber { background: var(--amber); }
+  .pill.purple { background: var(--purple); }
+
+  /* STAT CARDS */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 16px; margin-bottom: 24px;
+  }
+  .stats-grid-6 {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 14px; margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--surface); border-radius: var(--radius);
+    padding: 20px 22px; box-shadow: var(--shadow); border: 1px solid var(--border);
+    position: relative; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(10,31,60,0.12); }
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--navy), var(--navy-light));
+  }
+  .stat-card.gold::before { background: linear-gradient(90deg, var(--gold), var(--gold-bright)); }
+  .stat-card.green::before { background: linear-gradient(90deg, #16A34A, #22C55E); }
+  .stat-card.purple::before { background: linear-gradient(90deg, #7C3AED, #A78BFA); }
+  .stat-card.red::before { background: linear-gradient(90deg, #DC2626, #EF4444); }
+  .stat-card.amber::before { background: linear-gradient(90deg, #D97706, #F59E0B); }
+  .stat-icon {
+    width: 38px; height: 38px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
+    background: rgba(10,31,60,0.06);
+  }
+  .stat-icon svg { width: 18px; height: 18px; }
+  .stat-value { font-size: 28px; font-weight: 700; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 11.5px; color: var(--text-muted); font-weight: 500; }
+  .stat-sub { font-size: 11px; margin-top: 7px; color: var(--text-muted); }
+  .stat-sub.good { color: var(--green); font-weight: 500; }
+  .stat-sub.warn { color: var(--amber); font-weight: 500; }
+  .stat-sub.bad  { color: var(--red); font-weight: 500; }
+
+  /* CARD */
+  .card {
+    background: var(--surface); border-radius: var(--radius);
+    padding: 22px; box-shadow: var(--shadow); border: 1px solid var(--border);
+  }
+
+  /* GRIDS */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .grid-3  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .grid-3-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .grid-full { margin-bottom: 24px; }
+
+  /* BAR CHART */
+  .chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 110px; margin-top: 8px; }
+  .chart-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .chart-bar {
+    width: 100%; border-radius: 4px 4px 0 0; min-height: 2px;
+    background: linear-gradient(180deg, var(--navy-light), var(--navy));
+    transition: height 0.5s ease; cursor: pointer;
+  }
+  .chart-bar:hover { opacity: 0.75; }
+  .chart-bar-label { font-size: 9px; color: var(--text-muted); text-align: center; }
+
+  /* AREA BARS */
+  .area-list { display: flex; flex-direction: column; gap: 11px; }
+  .area-row-header { display: flex; justify-content: space-between; }
+  .area-name { font-size: 12px; font-weight: 500; color: var(--text); }
+  .area-count { font-size: 12px; font-weight: 600; color: var(--navy); }
+  .bar-track { height: 5px; background: var(--surface-alt); border-radius: 6px; overflow: hidden; margin-top: 4px; }
+  .bar-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--navy), var(--navy-light)); transition: width 0.6s ease; }
+
+  /* PLAN BARS */
+  .plan-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .plan-name { font-size: 12px; font-weight: 600; min-width: 90px; }
+  .plan-bar-track { flex: 1; height: 8px; background: var(--surface-alt); border-radius: 8px; overflow: hidden; }
+  .plan-bar-fill { height: 100%; border-radius: 8px; transition: width 0.6s ease; }
+  .plan-bar-fill.basico    { background: linear-gradient(90deg, #64748B, #94A3B8); }
+  .plan-bar-fill.profesional { background: linear-gradient(90deg, var(--navy), var(--navy-light)); }
+  .plan-bar-fill.empresarial { background: linear-gradient(90deg, var(--gold), var(--gold-bright)); }
+  .plan-count { font-size: 12px; color: var(--text-muted); min-width: 40px; text-align: right; }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    text-align: left; font-size: 11px; font-weight: 600;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 0 12px 10px; border-bottom: 1px solid var(--border);
+  }
+  .data-table td {
+    padding: 11px 12px; font-size: 12.5px; color: var(--text);
+    border-bottom: 1px solid var(--border); vertical-align: middle;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--surface-alt); }
+  .truncate { max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ts-cell { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex; align-items: center;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 10px;
+  }
+  .badge.basico      { background: rgba(100,116,139,0.12); color: #475569; }
+  .badge.profesional { background: rgba(10,31,60,0.10); color: var(--navy-mid); }
+  .badge.empresarial { background: rgba(184,134,11,0.13); color: #7A5200; }
+  .badge.activo      { background: rgba(22,163,74,0.12); color: var(--green); }
+  .badge.inactivo    { background: rgba(220,38,38,0.10); color: var(--red); }
+  .badge.trial       { background: rgba(217,119,6,0.12); color: var(--amber); }
+
+  /* FEED */
+  .feed { display: flex; flex-direction: column; gap: 0; }
+  .feed-item { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+  .feed-item:last-child { border-bottom: none; }
+  .feed-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--navy-light); flex-shrink: 0; margin-top: 4px; }
+  .feed-dot.green { background: var(--green); }
+  .feed-dot.gold  { background: var(--gold); }
+  .feed-dot.red   { background: var(--red); }
+  .feed-area { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+  .feed-msg  { font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+  .feed-time { font-size: 10.5px; color: var(--text-muted); margin-top: 2px; }
+
+  /* REFRESH */
+  .actions-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .page-header h2 { font-size: 20px; font-weight: 700; color: var(--navy); }
+  .page-header p  { font-size: 12.5px; color: var(--text-muted); margin-top: 3px; }
+  .refresh-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--navy); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 8px 16px; font-size: 12px; font-weight: 600;
+    font-family: 'Inter', sans-serif; cursor: pointer; transition: background 0.18s;
+  }
+  .refresh-btn:hover { background: var(--navy-mid); }
+  .refresh-btn svg { width: 14px; height: 14px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+  .refresh-btn.loading svg { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* EMPTY */
+  .empty-state { text-align: center; padding: 32px; color: var(--text-muted); font-size: 13px; }
+
+  /* FUNNEL */
+  .funnel { display: flex; flex-direction: column; gap: 10px; }
+  .funnel-step { display: flex; align-items: center; gap: 12px; }
+  .funnel-bar-wrap { flex: 1; }
+  .funnel-label { font-size: 12px; font-weight: 500; min-width: 120px; color: var(--text); }
+  .funnel-val   { font-size: 12px; font-weight: 600; min-width: 40px; text-align: right; color: var(--navy); }
+  .funnel-bar { height: 10px; border-radius: 8px; transition: width 0.6s ease; }
+
+  /* RETENTION GRID */
+  .retention-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; margin-top: 8px; }
+  .ret-cell {
+    aspect-ratio: 1; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 600; color: #fff; cursor: default;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) { .stats-grid-6 { grid-template-columns: repeat(3,1fr); } }
+  @media (max-width: 960px)  {
+    .stats-grid, .stats-grid-6 { grid-template-columns: repeat(2,1fr); }
+    .grid-3, .grid-3-1, .grid-2 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    header { padding: 0 14px; flex-wrap: wrap; gap: 8px; height: auto; min-height: 60px; padding-top: 10px; padding-bottom: 10px; }
+    .header-sub { display: none; }
+    .nav-tabs { padding: 0 10px; gap: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab { white-space: nowrap; font-size: 12px; padding: 10px 12px; }
+    main { padding: 14px 10px 40px; }
+    .stats-grid, .stats-grid-6 { grid-template-columns: repeat(2,1fr); gap: 10px; }
+    .grid-3, .grid-3-1, .grid-2, .grid-full { grid-template-columns: 1fr; }
+    .card { padding: 14px; }
+    .section-title { font-size: 13px; }
+    .stat-value { font-size: 26px; }
+
+    /* Tablas → cards verticales en mobile */
+    .data-table thead { display: none; }
+    .data-table, .data-table tbody, .data-table tr, .data-table td { display: block; width: 100%; }
+    .data-table tr {
+      background: var(--surface-alt); border-radius: 12px;
+      margin-bottom: 10px; padding: 12px 14px;
+      border: 1px solid var(--border); position: relative;
+    }
+    .data-table td {
+      padding: 4px 0; font-size: 12.5px;
+      border: none; text-align: left;
+    }
+    .data-table td::before {
+      content: attr(data-label);
+      font-size: 10px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      display: block; margin-bottom: 1px;
+    }
+    .data-table td select { width: 100%; }
+
+    /* Ocultar columnas menos importantes en mobile */
+    .hide-mobile { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+    </div>
+    <div>
+      <div class="header-title">Lex Fides Abogados — Admin</div>
+      <div class="header-sub">Panel de metricas · Tiempo real</div>
+    </div>
+  </div>
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    <span>EN VIVO</span>
+  </div>
+</header>
+
+<nav class="nav-tabs">
+  <div class="nav-tab active" onclick="showPage('overview')">Vision General</div>
+  <div class="nav-tab" onclick="showPage('users')">Usuarios</div>
+  <div class="nav-tab" onclick="showPage('subs')">Suscripciones <span id="nav-req-badge" style="display:inline-block;background:#f59e0b;color:#fff;border-radius:20px;font-size:9px;font-weight:800;padding:1px 6px;margin-left:4px;vertical-align:middle"></span></div>
+  <div class="nav-tab" onclick="showPage('activity')">Actividad</div>
+  <div class="nav-tab" onclick="showPage('performance')">Rendimiento</div>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════
+     PAGE: VISION GENERAL
+════════════════════════════════════════════════════ -->
+<div id="page-overview" class="page active">
+  <div class="actions-row">
+    <div class="page-header">
+      <h2>Vision general</h2>
+      <p id="last-update-ov">Conectando con Firebase...</p>
+    </div>
+    <button class="refresh-btn" id="refresh-btn-ov" onclick="manualRefresh('ov')">
+      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+      Actualizar
+    </button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="var(--navy)"><path d="M20 2H4a2 2 0 00-2 2v18l4-4h14a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg></div>
+      <div class="stat-value" id="ov-total-msgs">—</div>
+      <div class="stat-label">Mensajes totales</div>
+      <div class="stat-sub" id="ov-msgs-today">—</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="var(--gold)"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+      <div class="stat-value" id="ov-total-users">—</div>
+      <div class="stat-label">Usuarios registrados</div>
+      <div class="stat-sub" id="ov-users-today">—</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="var(--green)"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+      <div class="stat-value" id="ov-active-subs">—</div>
+      <div class="stat-label">Suscripciones activas</div>
+      <div class="stat-sub" id="ov-mrr">MRR: calculando...</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-icon"><svg viewBox="0 0 24 24" fill="var(--purple)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="stat-value" id="ov-avg-resp">—</div>
+      <div class="stat-label">Resp. promedio</div>
+      <div class="stat-sub" id="ov-uptime">Sistema activo</div>
+    </div>
+  </div>
+
+  <div class="grid-3-1">
+    <div class="card">
+      <div class="section-title">Actividad diaria <span class="pill">30 dias</span></div>
+      <div class="chart-bars" id="ov-daily-chart"><div class="empty-state">Cargando...</div></div>
+    </div>
+    <div class="card">
+      <div class="section-title">Distribucion por area</div>
+      <div class="area-list" id="ov-area-bars"><div class="empty-state">Cargando...</div></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title">Suscripciones por plan</div>
+      <div id="ov-plan-bars"><div class="empty-state">Cargando...</div></div>
+    </div>
+    <div class="card">
+      <div class="section-title">Actividad reciente</div>
+      <div class="feed" id="ov-feed"><div class="empty-state">Cargando...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PAGE: USUARIOS
+════════════════════════════════════════════════════ -->
+<div id="page-users" class="page">
+  <div class="actions-row">
+    <div class="page-header">
+      <h2>Usuarios</h2>
+      <p>Gestion y analisis de la base de usuarios</p>
+    </div>
+  </div>
+
+  <div class="stats-grid-6">
+    <div class="stat-card">
+      <div class="stat-value" id="u-total">—</div>
+      <div class="stat-label">Total usuarios</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-value" id="u-activos">—</div>
+      <div class="stat-label">Activos (7d)</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-value" id="u-nuevos-hoy">—</div>
+      <div class="stat-label">Nuevos hoy</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="u-nuevos-mes">—</div>
+      <div class="stat-label">Nuevos este mes</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-value" id="u-churn">—</div>
+      <div class="stat-label">Churn (30d)</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-value" id="u-retention">—</div>
+      <div class="stat-label">Retencion D7</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title">Nuevos usuarios por dia <span class="pill">30 dias</span></div>
+      <div class="chart-bars" id="u-daily-chart"><div class="empty-state">Sin datos</div></div>
+    </div>
+    <div class="card">
+      <div class="section-title">Funnel de conversion</div>
+      <div class="funnel" id="u-funnel">
+        <div class="empty-state">Sin datos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-full card">
+    <div class="section-title">Lista de usuarios <span class="pill">Ultimos 50</span></div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Email / ID</th>
+            <th>Plan</th>
+            <th>Estado</th>
+            <th>Mensajes</th>
+            <th>Sesiones</th>
+            <th>Ultima actividad</th>
+            <th>Registro</th>
+          </tr>
+        </thead>
+        <tbody id="users-table"><tr><td colspan="7" class="empty-state">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PAGE: SUSCRIPCIONES
+════════════════════════════════════════════════════ -->
+<div id="page-subs" class="page">
+  <div class="actions-row">
+    <div class="page-header">
+      <h2>Suscripciones</h2>
+      <p>Metricas de ingresos y planes</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card green">
+      <div class="stat-value" id="s-mrr">$ 0</div>
+      <div class="stat-label">MRR (Ingreso mensual)</div>
+      <div class="stat-sub" id="s-mrr-delta">—</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-value" id="s-arr">$ 0</div>
+      <div class="stat-label">ARR (Ingreso anual)</div>
+      <div class="stat-sub">Proyeccion anual</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="s-total-subs">—</div>
+      <div class="stat-label">Suscripciones activas</div>
+      <div class="stat-sub" id="s-subs-delta">—</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-value" id="s-churn-rate">—</div>
+      <div class="stat-label">Churn rate</div>
+      <div class="stat-sub">Ultimos 30 dias</div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="section-title">Plan Basico <span class="pill" style="background:#64748B">BASICO</span></div>
+      <div class="stat-value" id="s-basico-count" style="font-size:36px;margin:12px 0 4px">—</div>
+      <div class="stat-label">suscriptores</div>
+      <div style="margin-top:14px;font-size:12px;color:var(--text-muted)">Precio: <strong style="color:var(--text)">$35/mes</strong></div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Limite: <strong style="color:var(--text)">50 mensajes/mes</strong></div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Areas: <strong style="color:var(--text)">3 areas</strong></div>
+      <div class="stat-sub" id="s-basico-rev" style="margin-top:10px">—</div>
+    </div>
+    <div class="card">
+      <div class="section-title">Plan Profesional <span class="pill">PROFESIONAL</span></div>
+      <div class="stat-value" id="s-pro-count" style="font-size:36px;margin:12px 0 4px">—</div>
+      <div class="stat-label">suscriptores</div>
+      <div style="margin-top:14px;font-size:12px;color:var(--text-muted)">Precio: <strong style="color:var(--text)">$60/mes</strong></div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Limite: <strong style="color:var(--text)">300 mensajes/mes</strong></div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Areas: <strong style="color:var(--text)">Todas las areas</strong></div>
+      <div class="stat-sub good" id="s-pro-rev" style="margin-top:10px">—</div>
+    </div>
+    <div class="card">
+      <div class="section-title">Plan Empresarial <span class="pill amber" style="background:var(--gold)">EMPRESARIAL</span></div>
+      <div class="stat-value" id="s-emp-count" style="font-size:36px;margin:12px 0 4px">—</div>
+      <div class="stat-label">suscriptores</div>
+      <div style="margin-top:14px;font-size:12px;color:var(--text-muted)">Precio: <strong style="color:var(--text)">$75/mes</strong></div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Limite: <strong style="color:var(--text)">Ilimitado</strong></div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">Areas: <strong style="color:var(--text)">Todas + Prioridad</strong></div>
+      <div class="stat-sub good" id="s-emp-rev" style="margin-top:10px">—</div>
+    </div>
+  </div>
+
+  <!-- Solicitudes de pago pendientes -->
+  <div class="grid-full card" style="border:2px solid var(--amber)">
+    <div class="section-title" style="color:var(--amber)">
+      Solicitudes de activacion de plan
+      <span class="pill" id="req-badge" style="background:var(--amber);color:#fff;min-width:20px;text-align:center"></span>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin-bottom:14px">Usuarios que reportaron haber realizado el pago y esperan activacion manual.</p>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Plan actual</th>
+            <th>Plan solicitado</th>
+            <th>Monto</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="requests-table"><tr><td colspan="6" class="empty-state">Sin solicitudes aun</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-full card">
+    <div class="section-title">Suscriptores activos <span class="pill">Ultimos 50</span></div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Plan</th>
+            <th>Estado</th>
+            <th>Mensajes usados</th>
+            <th>Limite</th>
+            <th>% Uso</th>
+            <th>Renovacion</th>
+          </tr>
+        </thead>
+        <tbody id="subs-table"><tr><td colspan="7" class="empty-state">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PAGE: ACTIVIDAD
+════════════════════════════════════════════════════ -->
+<div id="page-activity" class="page">
+  <div class="actions-row">
+    <div class="page-header">
+      <h2>Actividad del chat</h2>
+      <p>Todas las consultas y conversaciones</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value" id="a-msgs-hoy">—</div>
+      <div class="stat-label">Mensajes hoy</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-value" id="a-msgs-semana">—</div>
+      <div class="stat-label">Esta semana</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-value" id="a-sessions-activas">—</div>
+      <div class="stat-label">Sesiones totales</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="a-top-area">—</div>
+      <div class="stat-label">Area mas consultada</div>
+    </div>
+  </div>
+
+  <div class="grid-3-1">
+    <div class="card">
+      <div class="section-title">Ultimos 100 mensajes</div>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Consulta del usuario</th>
+              <th>Duracion</th>
+              <th>Plan</th>
+              <th>Hora</th>
+            </tr>
+          </thead>
+          <tbody id="activity-table"><tr><td colspan="5" class="empty-state">Cargando...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">Feed en tiempo real</div>
+      <div class="feed" id="a-feed"><div class="empty-state">Esperando actividad...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PAGE: RENDIMIENTO
+════════════════════════════════════════════════════ -->
+<div id="page-performance" class="page">
+  <div class="actions-row">
+    <div class="page-header">
+      <h2>Rendimiento del sistema</h2>
+      <p>Tiempos de respuesta, errores y disponibilidad</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card green">
+      <div class="stat-value" id="p-uptime">99.9%</div>
+      <div class="stat-label">Disponibilidad</div>
+      <div class="stat-sub good">Ultimo mes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="p-avg-resp">—</div>
+      <div class="stat-label">Tiempo resp. promedio</div>
+      <div class="stat-sub">Todos los mensajes</div>
+    </div>
+    <div class="stat-card amber">
+      <div class="stat-value" id="p-p95">—</div>
+      <div class="stat-label">Percentil 95</div>
+      <div class="stat-sub">Tiempo de respuesta</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-value" id="p-errors">—</div>
+      <div class="stat-label">Errores (24h)</div>
+      <div class="stat-sub" id="p-error-rate">—</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title">Distribucion de tiempos de respuesta</div>
+      <div id="p-duration-bars" style="margin-top:8px"><div class="empty-state">Sin datos</div></div>
+    </div>
+    <div class="card">
+      <div class="section-title">Rendimiento por area</div>
+      <div id="p-area-perf"><div class="empty-state">Sin datos</div></div>
+    </div>
+  </div>
+
+  <div class="grid-full card">
+    <div class="section-title">Mensajes mas lentos <span class="pill amber">TOP 20</span></div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Duracion</th>
+            <th>Area</th>
+            <th>Consulta</th>
+            <th>Hora</th>
+          </tr>
+        </thead>
+        <tbody id="slow-table"><tr><td colspan="4" class="empty-state">Sin datos aun</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script type="module">
+import { initializeApp }    from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js';
+import {
+  getFirestore, collection, query, orderBy, limit,
+  onSnapshot, doc, where, getDocs, Timestamp, setDoc, updateDoc, deleteDoc
+} from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCnAtbGQeIZ8pSfGYz1fHpk5-uCgzK3eoE",
+  authDomain: "asistente-juridico-76a09.firebaseapp.com",
+  projectId: "asistente-juridico-76a09",
+  storageBucket: "asistente-juridico-76a09.firebasestorage.app",
+  messagingSenderId: "951347262110",
+  appId: "1:951347262110:web:5ecba101d72abd1642c18f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+const AREA_LABELS = {
+  general:'General', laboral:'Laboral', penal:'Penal', civil:'Civil',
+  familiar:'Familiar', mercantil:'Mercantil', constitucional:'Constitucional',
+  administrativo:'Administrativo', tributario:'Tributario'
+};
+
+const PLAN_PRICES = { basico: 35, profesional: 60, empresarial: 75 };
+const PLAN_LIMITS = { basico: 150, profesional: 600, empresarial: Infinity };
+
+// ── Utilidades ──
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function fmtTs(ts) {
+  if (!ts) return '—';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('es-VE',{day:'2-digit',month:'short'}) + ' ' +
+         d.toLocaleTimeString('es-VE',{hour:'2-digit',minute:'2-digit'});
+}
+function timeAgo(ts) {
+  if (!ts) return '';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  const s = Math.floor((Date.now() - d)/1000);
+  if (s < 60)   return 'hace ' + s + 's';
+  if (s < 3600) return 'hace ' + Math.floor(s/60) + 'm';
+  if (s < 86400)return 'hace ' + Math.floor(s/3600) + 'h';
+  return 'hace ' + Math.floor(s/86400) + 'd';
+}
+function todayKey() { return new Date().toISOString().split('T')[0]; }
+function weekStart() {
+  const d = new Date(); d.setDate(d.getDate()-7);
+  return Timestamp.fromDate(d);
+}
+
+window.manualRefresh = function(id) {
+  const btn = document.getElementById('refresh-btn-' + id);
+  if (!btn) return;
+  btn.classList.add('loading');
+  setTimeout(() => btn.classList.remove('loading'), 900);
+};
+
+// ── NAV ──
+window.showPage = function(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const tabs = ['overview','users','subs','activity','performance'];
+  document.querySelectorAll('.nav-tab')[tabs.indexOf(name)]?.classList.add('active');
+};
+
+// ════════════════════════════════════════════════════
+//  SNAPSHOT: stats_global/totals
+// ════════════════════════════════════════════════════
+onSnapshot(doc(db,'stats_global','totals'), snap => {
+  if (!snap.exists()) return;
+  const d = snap.data();
+  const msgs = d.totalMessages || 0;
+  const sessions = d.totalSessions || 0;
+
+  setText('ov-total-msgs', msgs.toLocaleString('es-VE'));
+  setText('a-sessions-activas', sessions.toLocaleString('es-VE'));
+  setText('last-update-ov', 'Ultima actualizacion: ' + new Date().toLocaleTimeString('es-VE'));
+  // ov-total-users y u-total se actualizan desde el snapshot real de users
+});
+
+// ════════════════════════════════════════════════════
+//  SNAPSHOT: messages (ultimos 100, tiempo real)
+// ════════════════════════════════════════════════════
+const msgQ = query(collection(db,'messages'), orderBy('createdAt','desc'), limit(100));
+let allMsgs = [];
+
+onSnapshot(msgQ, snap => {
+  allMsgs = [];
+  snap.forEach(d => allMsgs.push({ id: d.id, ...d.data() }));
+
+  // ── VISION GENERAL ──
+  renderFeed('ov-feed', allMsgs.slice(0,8));
+
+  const byArea = {};
+  allMsgs.forEach(m => { byArea[m.area||'general'] = (byArea[m.area||'general']||0)+1; });
+  renderAreaBars('ov-area-bars', byArea);
+
+  const topAreaEntry = Object.entries(byArea).sort((a,b)=>b[1]-a[1])[0];
+  if (topAreaEntry) {
+    setText('ov-area-top', AREA_LABELS[topAreaEntry[0]]||topAreaEntry[0]);
+    setText('a-top-area', AREA_LABELS[topAreaEntry[0]]||topAreaEntry[0]);
+  }
+
+  // Tiempo respuesta promedio
+  const durMsgs = allMsgs.filter(m => m.durationMs);
+  if (durMsgs.length) {
+    const avg = durMsgs.reduce((s,m) => s + m.durationMs, 0) / durMsgs.length;
+    setText('ov-avg-resp', (avg/1000).toFixed(1)+'s');
+    setText('p-avg-resp', (avg/1000).toFixed(1)+'s');
+
+    // P95
+    const sorted = durMsgs.map(m=>m.durationMs).sort((a,b)=>a-b);
+    const p95 = sorted[Math.floor(sorted.length*0.95)] || sorted[sorted.length-1];
+    setText('p-p95', (p95/1000).toFixed(1)+'s');
+  }
+
+  // ── ACTIVIDAD ──
+  renderActivityTable(allMsgs.slice(0,100));
+  renderFeed('a-feed', allMsgs.slice(0,12));
+
+  const today = todayKey();
+  const msgsHoy = allMsgs.filter(m => m.dateKey === today).length;
+  const weekAgo = Date.now() - 7*86400*1000;
+  const msgsSemana = allMsgs.filter(m => {
+    const ts = m.createdAt?.toDate?.();
+    return ts && ts.getTime() > weekAgo;
+  }).length;
+  setText('a-msgs-hoy', msgsHoy.toLocaleString('es-VE'));
+  setText('a-msgs-semana', msgsSemana.toLocaleString('es-VE'));
+  setText('ov-msgs-today', msgsHoy > 0 ? msgsHoy + ' consultas hoy' : 'Sin consultas hoy');
+
+  // ── RENDIMIENTO ──
+  renderDurationDist(durMsgs);
+  renderAreaPerf(allMsgs);
+  renderSlowTable(allMsgs);
+});
+
+// ════════════════════════════════════════════════════
+//  SNAPSHOT: stats_daily (actividad diaria)
+// ════════════════════════════════════════════════════
+const dailyQ = query(collection(db,'stats_daily'), orderBy('date','desc'), limit(30));
+onSnapshot(dailyQ, snap => {
+  const byDate = {};
+  snap.forEach(d => {
+    const dd = d.data();
+    byDate[dd.date] = (byDate[dd.date]||0) + (dd.count||0);
+  });
+  const entries = Object.entries(byDate).sort((a,b)=>a[0].localeCompare(b[0]));
+  renderBarChart('ov-daily-chart', entries);
+  renderBarChart('u-daily-chart', entries);
+});
+
+// ════════════════════════════════════════════════════
+//  SNAPSHOT: users (ultimos 50)
+// ════════════════════════════════════════════════════
+const usersQ = query(collection(db,'users'), orderBy('createdAt','desc'), limit(50));
+onSnapshot(usersQ, snap => {
+  const users = [];
+  snap.forEach(d => users.push({ id: d.id, ...d.data() }));
+
+  renderUsersTable(users);
+
+  // Conteo real de usuarios registrados
+  setText('ov-total-users', users.length.toLocaleString('es-VE'));
+  setText('u-total', users.length.toLocaleString('es-VE'));
+
+  const today = todayKey();
+  const thisMonth = today.slice(0,7);
+  const newHoy = users.filter(u => u.createdAt?.toDate?.().toISOString().startsWith(today)).length;
+  const newMes  = users.filter(u => u.createdAt?.toDate?.().toISOString().startsWith(thisMonth)).length;
+  setText('u-nuevos-hoy', newHoy);
+  setText('u-nuevos-mes', newMes);
+  setText('ov-users-today', newHoy > 0 ? '+' + newHoy + ' hoy' : 'Sin altas hoy');
+
+  // Funnel
+  const total = users.length || 0;
+  const activos7d = users.filter(u => {
+    const la = u.lastActivity?.toDate?.();
+    return la && (Date.now() - la.getTime()) < 7*86400*1000;
+  }).length;
+  const conSub = users.filter(u => u.plan && u.plan !== 'free').length;
+  renderFunnel(total, activos7d, conSub);
+  setText('u-activos', activos7d);
+
+  // ── Calcular stats de suscripciones desde users (fuente real) ──
+  const basicoCnt = users.filter(u => u.plan === 'basico').length;
+  const proCnt    = users.filter(u => u.plan === 'profesional').length;
+  const empCnt    = users.filter(u => u.plan === 'empresarial').length;
+  const totalSubs = basicoCnt + proCnt + empCnt;
+  const mrr = basicoCnt * PLAN_PRICES.basico + proCnt * PLAN_PRICES.profesional + empCnt * PLAN_PRICES.empresarial;
+  const arr = mrr * 12;
+
+  setText('ov-active-subs', totalSubs);
+  setText('ov-mrr', 'MRR: $ ' + mrr.toLocaleString('es-VE'));
+  setText('s-mrr', '$ ' + mrr.toLocaleString('es-VE'));
+  setText('s-arr', '$ ' + arr.toLocaleString('es-VE'));
+  setText('s-total-subs', totalSubs);
+  setText('s-basico-count', basicoCnt);
+  setText('s-pro-count', proCnt);
+  setText('s-emp-count', empCnt);
+  setText('s-basico-rev', 'Revenue: $ ' + (basicoCnt * PLAN_PRICES.basico).toLocaleString('es-VE') + '/mes');
+  setText('s-pro-rev',    'Revenue: $ ' + (proCnt * PLAN_PRICES.profesional).toLocaleString('es-VE') + '/mes');
+  setText('s-emp-rev',    'Revenue: $ ' + (empCnt * PLAN_PRICES.empresarial).toLocaleString('es-VE') + '/mes');
+  setText('s-churn-rate', '0.0%');
+  setText('u-retention', totalSubs > 0 ? '100%' : '—');
+  renderPlanBars('ov-plan-bars', basicoCnt, proCnt, empCnt);
+
+  // Tabla de suscriptores activos (usuarios con plan pagado)
+  const subsActivos = users.filter(u => u.plan && u.plan !== 'free').map(u => ({
+    ...u,
+    userEmail: u.email || u.id,
+    status: 'active',
+    messagesUsed: u.messagesUsed || u.messageCount || 0
+  }));
+  renderSubsTable(subsActivos);
+});
+
+// ════════════════════════════════════════════════════
+//  SNAPSHOT: plan_requests (solicitudes de pago pendientes)
+// ════════════════════════════════════════════════════
+const reqQ = query(collection(db,'plan_requests'), orderBy('createdAt','desc'), limit(50));
+onSnapshot(reqQ, snap => {
+  const reqs = [];
+  snap.forEach(d => reqs.push({ id: d.id, ...d.data() }));
+  const pending = reqs.filter(r => r.estado === 'pendiente');
+  // Badge en tab Suscripciones
+  const badge = document.getElementById('req-badge');
+  if (badge) badge.textContent = pending.length || '';
+  const navBadge = document.getElementById('nav-req-badge');
+  if (navBadge) navBadge.textContent = pending.length || '';
+  renderRequestsTable(reqs);
+});
+
+// ════════════════════════════════════════════════════
+//  RENDERERS
+// ════════════════════════════════════════════════════
+function setText(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function renderBarChart(containerId, entries) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!entries.length) { el.innerHTML = '<div class="empty-state">Sin datos aun</div>'; return; }
+  const maxVal = Math.max(...entries.map(e=>e[1]), 1);
+  el.innerHTML = entries.map(([date, count]) => {
+    const h = Math.max(3, Math.round((count/maxVal)*100));
+    return `<div class="chart-bar-col" title="${date}: ${count}">
+      <div class="chart-bar" style="height:${h}%"></div>
+      <span class="chart-bar-label">${date.slice(5)}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderAreaBars(containerId, byArea) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const total = Object.values(byArea).reduce((s,v)=>s+v,0) || 1;
+  const sorted = Object.entries(byArea).sort((a,b)=>b[1]-a[1]);
+  el.innerHTML = sorted.map(([area, count]) => {
+    const pct = Math.round((count/total)*100);
+    return `<div class="area-row">
+      <div class="area-row-header">
+        <span class="area-name">${esc(AREA_LABELS[area]||area)}</span>
+        <span class="area-count">${count}</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('') || '<div class="empty-state">Sin datos</div>';
+}
+
+function renderFeed(containerId, msgs) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!msgs.length) { el.innerHTML = '<div class="empty-state">Sin actividad aun</div>'; return; }
+  el.innerHTML = msgs.map(m => `
+    <div class="feed-item">
+      <div class="feed-dot"></div>
+      <div class="feed-content">
+        <div class="feed-area">${esc(AREA_LABELS[m.area]||m.area||'general')}</div>
+        <div class="feed-msg">${esc(m.userMessage||'')}</div>
+        <div class="feed-time">${timeAgo(m.createdAt)}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderActivityTable(msgs) {
+  const el = document.getElementById('activity-table');
+  if (!el) return;
+  if (!msgs.length) { el.innerHTML = '<tr><td colspan="5" class="empty-state">Sin mensajes</td></tr>'; return; }
+  el.innerHTML = msgs.map(m => `
+    <tr>
+      <td data-label="Area"><span class="badge profesional">${esc(AREA_LABELS[m.area]||m.area||'general')}</span></td>
+      <td data-label="Consulta"><div class="truncate">${esc(m.userMessage||'')}</div></td>
+      <td data-label="Tiempo" class="ts-cell">${m.durationMs ? (m.durationMs/1000).toFixed(1)+'s' : '—'}</td>
+      <td data-label="Plan"><span class="badge basico">${esc(m.plan||'free')}</span></td>
+      <td data-label="Fecha" class="ts-cell">${fmtTs(m.createdAt)}</td>
+    </tr>`).join('');
+}
+
+function renderUsersTable(users) {
+  const el = document.getElementById('users-table');
+  if (!el) return;
+  if (!users.length) { el.innerHTML = '<tr><td colspan="7" class="empty-state">Sin usuarios registrados aun</td></tr>'; return; }
+  el.innerHTML = users.map(u => {
+    const planBadge = u.plan === 'empresarial' ? 'empresarial' : u.plan === 'profesional' ? 'profesional' : 'basico';
+    const isActive = u.active !== false;
+    return `<tr>
+      <td data-label="Usuario">
+        <div style="font-size:12.5px;font-weight:500">${esc(u.nombre||'Sin nombre')}</div>
+        <div class="ts-cell">${esc(u.email||u.id)}</div>
+      </td>
+      <td data-label="Plan">
+        <select onchange="cambiarPlan('${u.id}', this.value)" style="font-size:12px;padding:4px 8px;border-radius:8px;border:1.5px solid var(--border-strong);background:var(--surface-alt);font-family:'Inter',sans-serif;cursor:pointer">
+          <option value="free"         ${u.plan==='free'?'selected':''}>Free</option>
+          <option value="basico"       ${u.plan==='basico'?'selected':''}>Basico — $35</option>
+          <option value="profesional"  ${u.plan==='profesional'?'selected':''}>Profesional — $60</option>
+          <option value="empresarial"  ${u.plan==='empresarial'?'selected':''}>Empresarial — $75</option>
+        </select>
+      </td>
+      <td data-label="Estado">
+        <button onclick="toggleActivo('${u.id}', ${isActive})"
+          style="font-size:11px;font-weight:700;padding:4px 12px;border-radius:8px;border:none;cursor:pointer;
+          background:${isActive?'rgba(22,163,74,0.12)':'rgba(220,38,38,0.10)'};
+          color:${isActive?'#16A34A':'#DC2626'}">
+          ${isActive ? 'Activo' : 'Inactivo'}
+        </button>
+      </td>
+      <td data-label="Mensajes">${(u.messagesUsed||u.messageCount||0).toLocaleString('es-VE')} / ${planLimitLabel(u.plan)}</td>
+      <td data-label="Sesiones">${(u.sessionCount||0)}</td>
+      <td data-label="Ultima actividad" class="ts-cell">${fmtTs(u.lastActivity)}</td>
+      <td data-label="Registro" class="ts-cell">${fmtTs(u.createdAt)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function planLimitLabel(plan) {
+  const l = { free:10, basico:50, profesional:300, empresarial:'∞' };
+  return l[plan] || 10;
+}
+
+async function cambiarPlan(uid, nuevoPlan) {
+  try {
+    await setDoc(doc(db, 'users', uid), { plan: nuevoPlan }, { merge: true });
+    showToast('Plan actualizado a ' + nuevoPlan);
+  } catch(e) { showToast('Error: ' + e.message, true); }
+}
+
+async function toggleActivo(uid, activo) {
+  try {
+    await setDoc(doc(db, 'users', uid), { active: !activo }, { merge: true });
+    showToast(activo ? 'Usuario desactivado' : 'Usuario activado');
+  } catch(e) { showToast('Error: ' + e.message, true); }
+}
+
+function showToast(msg, err) {
+  let t = document.getElementById('admin-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'admin-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:999;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;font-family:Inter,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,0.15);transition:opacity 0.3s';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.background = err ? '#DC2626' : '#16A34A';
+  t.style.color = '#fff';
+  t.style.opacity = '1';
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.style.opacity = '0', 2500);
+}
+
+function renderSubsTable(subs) {
+  const el = document.getElementById('subs-table');
+  if (!el) return;
+  if (!subs.length) { el.innerHTML = '<tr><td colspan="7" class="empty-state">Sin suscripciones aun</td></tr>'; return; }
+  el.innerHTML = subs.map(s => {
+    const limit = PLAN_LIMITS[s.plan] || 0;
+    const used  = s.messagesUsed || 0;
+    const pct   = limit === Infinity ? 0 : Math.min(100, Math.round((used/limit)*100));
+    const color = pct > 90 ? 'var(--red)' : pct > 70 ? 'var(--amber)' : 'var(--green)';
+    return `<tr>
+      <td class="ts-cell">${esc(s.userEmail || s.userId)}</td>
+      <td><span class="badge ${s.plan||'basico'}">${esc(s.plan||'basico')}</span></td>
+      <td><span class="badge ${s.status==='active'?'activo':s.status==='trial'?'trial':'inactivo'}">${esc(s.status||'—')}</span></td>
+      <td>${used.toLocaleString('es-VE')}</td>
+      <td>${limit === Infinity ? 'Ilimitado' : limit.toLocaleString('es-VE')}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="flex:1;height:6px;background:var(--surface-alt);border-radius:4px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${color};border-radius:4px"></div>
+          </div>
+          <span style="font-size:11px;color:var(--text-muted)">${limit===Infinity?'—':pct+'%'}</span>
+        </div>
+      </td>
+      <td data-label="Expira" class="ts-cell">${fmtTs(s.planExpiry || s.renewalDate)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderRequestsTable(reqs) {
+  const el = document.getElementById('requests-table');
+  if (!el) return;
+  if (!reqs.length) { el.innerHTML = '<tr><td colspan="6" class="empty-state">Sin solicitudes aun</td></tr>'; return; }
+  el.innerHTML = reqs.map(r => {
+    const estadoColor = r.estado === 'pendiente' ? 'var(--amber)' : r.estado === 'aprobado' ? 'var(--green)' : 'var(--red)';
+    const actions = r.estado === 'pendiente' ? `
+      <button onclick="approveRequest('${r.id}','${r.userId}','${r.planSolicitado}')" style="padding:5px 12px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif">Aprobar</button>
+      <button onclick="rejectRequest('${r.id}')" style="padding:5px 12px;border-radius:8px;border:none;background:var(--red);color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;margin-left:4px">Rechazar</button>
+    ` : `<span style="font-size:11px;color:var(--text-muted)">${r.estado}</span>`;
+    return `<tr>
+      <td data-label="Email" class="ts-cell">${esc(r.email || r.userId)}</td>
+      <td data-label="Plan actual">${esc(r.planActual || 'free')}</td>
+      <td data-label="Plan solicitado"><span class="badge ${r.planSolicitado||'basico'}">${esc(r.planSolicitado||'—')}</span></td>
+      <td data-label="Monto">$ ${(r.precioMonto||0).toLocaleString('es-VE')}</td>
+      <td data-label="Estado"><span style="font-weight:600;color:${estadoColor}">${esc(r.estado||'—')}</span></td>
+      <td data-label="Acciones">${actions}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function approveRequest(reqId, userId, plan) {
+  if (!confirm(`Activar plan "${plan}" para este usuario?`)) return;
+  try {
+    const expiry = new Date();
+    expiry.setMonth(expiry.getMonth() + 1);
+    await setDoc(doc(db,'users',userId), {
+      plan,
+      planExpiry: Timestamp.fromDate(expiry),
+      messagesUsed: 0,
+      planExpired: false
+    }, { merge: true });
+    await updateDoc(doc(db,'plan_requests',reqId), { estado: 'aprobado', approvedAt: Timestamp.now() });
+    showToast('Plan activado — expira el ' + expiry.toLocaleDateString('es-VE'));
+  } catch(e) { showToast('Error: ' + e.message, true); }
+}
+
+async function rejectRequest(reqId) {
+  if (!confirm('Rechazar esta solicitud?')) return;
+  try {
+    await updateDoc(doc(db,'plan_requests',reqId), { estado: 'rechazado', rejectedAt: Timestamp.now() });
+    showToast('Solicitud rechazada');
+  } catch(e) { showToast('Error: ' + e.message, true); }
+}
+
+// Exponer al scope global para onclick en HTML dinamico
+window.approveRequest = approveRequest;
+window.rejectRequest  = rejectRequest;
+window.cambiarPlan    = cambiarPlan;
+window.toggleActivo   = toggleActivo;
+
+function renderPlanBars(containerId, basico, pro, emp) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const total = (basico + pro + emp) || 1;
+  el.innerHTML = [
+    { name:'Basico', val:basico, cls:'basico' },
+    { name:'Profesional', val:pro, cls:'profesional' },
+    { name:'Empresarial', val:emp, cls:'empresarial' }
+  ].map(p => `
+    <div class="plan-row">
+      <span class="plan-name">${p.name}</span>
+      <div class="plan-bar-track">
+        <div class="plan-bar-fill ${p.cls}" style="width:${Math.round((p.val/total)*100)}%"></div>
+      </div>
+      <span class="plan-count">${p.val}</span>
+    </div>`).join('');
+}
+
+function renderFunnel(total, activos, conSub) {
+  const el = document.getElementById('u-funnel');
+  if (!el) return;
+  const steps = [
+    { label: 'Registros totales', val: total, color: 'var(--navy)', w: 100 },
+    { label: 'Activos (7d)',       val: activos, color: 'var(--navy-light)', w: total ? Math.round((activos/total)*100) : 0 },
+    { label: 'Con suscripcion',    val: conSub,  color: 'var(--gold)',       w: total ? Math.round((conSub/total)*100) : 0 },
+  ];
+  el.innerHTML = steps.map(s => `
+    <div class="funnel-step">
+      <span class="funnel-label">${s.label}</span>
+      <div class="funnel-bar-wrap">
+        <div class="funnel-bar" style="width:${s.w}%;background:${s.color};opacity:0.85"></div>
+      </div>
+      <span class="funnel-val">${s.val}</span>
+    </div>`).join('');
+}
+
+function renderDurationDist(msgs) {
+  const el = document.getElementById('p-duration-bars');
+  if (!el || !msgs.length) return;
+  const buckets = { '<1s':0, '1-2s':0, '2-4s':0, '4-8s':0, '>8s':0 };
+  msgs.forEach(m => {
+    const s = m.durationMs / 1000;
+    if (s < 1)      buckets['<1s']++;
+    else if (s < 2) buckets['1-2s']++;
+    else if (s < 4) buckets['2-4s']++;
+    else if (s < 8) buckets['4-8s']++;
+    else            buckets['>8s']++;
+  });
+  const max = Math.max(...Object.values(buckets), 1);
+  el.innerHTML = Object.entries(buckets).map(([label, count]) => {
+    const pct = Math.round((count/total)*100);
+    const h = Math.round((count/max)*100);
+    return `<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <span style="font-size:12px;font-weight:500;min-width:44px">${label}</span>
+      <div style="flex:1;height:8px;background:var(--surface-alt);border-radius:4px;overflow:hidden">
+        <div style="width:${Math.round((count/max)*100)}%;height:100%;background:var(--navy);border-radius:4px"></div>
+      </div>
+      <span style="font-size:12px;color:var(--text-muted);min-width:36px;text-align:right">${count}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderAreaPerf(msgs) {
+  const el = document.getElementById('p-area-perf');
+  if (!el) return;
+  const byArea = {};
+  msgs.filter(m=>m.durationMs).forEach(m => {
+    const a = m.area||'general';
+    if (!byArea[a]) byArea[a] = { total:0, count:0 };
+    byArea[a].total += m.durationMs;
+    byArea[a].count++;
+  });
+  const sorted = Object.entries(byArea).map(([area,d]) => ({ area, avg: d.total/d.count, count: d.count })).sort((a,b)=>a.avg-b.avg);
+  const maxAvg = Math.max(...sorted.map(s=>s.avg), 1);
+  el.innerHTML = sorted.map(s => {
+    const color = s.avg < 2000 ? 'var(--green)' : s.avg < 5000 ? 'var(--amber)' : 'var(--red)';
+    return `<div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:12px;font-weight:500">${esc(AREA_LABELS[s.area]||s.area)}</span>
+        <span style="font-size:12px;color:var(--text-muted)">${(s.avg/1000).toFixed(1)}s avg (${s.count} msgs)</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${Math.round((s.avg/maxAvg)*100)}%;background:${color}"></div></div>
+    </div>`;
+  }).join('') || '<div class="empty-state">Sin datos</div>';
+}
+
+function renderSlowTable(msgs) {
+  const el = document.getElementById('slow-table');
+  if (!el) return;
+  const slow = msgs.filter(m=>m.durationMs).sort((a,b)=>b.durationMs-a.durationMs).slice(0,20);
+  if (!slow.length) { el.innerHTML = '<tr><td colspan="4" class="empty-state">Sin datos</td></tr>'; return; }
+  el.innerHTML = slow.map(m => `
+    <tr>
+      <td><strong style="color:${m.durationMs>8000?'var(--red)':m.durationMs>4000?'var(--amber)':'var(--text)'}">${(m.durationMs/1000).toFixed(2)}s</strong></td>
+      <td><span class="badge profesional">${esc(AREA_LABELS[m.area]||m.area||'general')}</span></td>
+      <td><div class="truncate">${esc(m.userMessage||'')}</div></td>
+      <td class="ts-cell">${fmtTs(m.createdAt)}</td>
+    </tr>`).join('');
+}
+</script>
+
+</body>
+</html>

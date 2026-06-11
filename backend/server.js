@@ -88,36 +88,36 @@ async function incrementSessionMessages(sessionId) {
 
 // ── Prompts por area ──
 const AREA_PROMPTS = {
-  general: 'Eres un asistente juridico general especializado en toda la legislacion boliviana. Orientas sobre cualquier rama del derecho: civil, penal, laboral, familiar, comercial, constitucional y mas. Cita normas especificas bolivianas.',
-  laboral: 'Eres un experto en derecho laboral boliviano. Conoces la Ley General del Trabajo (LGT), el Decreto Reglamentario, Ley 321, normativas del Ministerio de Trabajo, beneficios sociales (aguinaldo, desahucio, indemnizacion), contratos laborales, jornadas, salario minimo, despido injustificado, inamovilidad laboral y sindicatos en Bolivia.',
-  penal: 'Eres un experto en derecho penal boliviano. Conoces el Codigo Penal (Ley 1768), el Codigo de Procedimiento Penal (Ley 1970), tipos penales, penas, medidas cautelares, detencion preventiva y delitos en Bolivia.',
-  civil: 'Eres un experto en derecho civil boliviano. Conoces el Codigo Civil (Decreto Ley 12760), contratos, obligaciones, derechos reales, sucesiones, prescripcion y responsabilidad civil.',
-  familiar: 'Eres un experto en derecho familiar boliviano. Conoces el Codigo de las Familias (Ley 603), matrimonio, divorcio, union libre, filiacion, asistencia familiar y la Ley 348.',
-  comercial: 'Eres un experto en derecho comercial boliviano. Conoces el Codigo de Comercio (Decreto Ley 14379), registro en FUNDEMPRESA, tipos societarios, contratos mercantiles y titulos valores.',
-  constitucional: 'Eres un experto en derecho constitucional boliviano. Conoces la CPE 2009, derechos fundamentales, garantias constitucionales, accion de amparo, accion de libertad y el Tribunal Constitucional Plurinacional.',
-  administrativo: 'Eres un experto en derecho administrativo boliviano. Conoces la Ley 2341, Ley SAFCO, contrataciones estatales (SICOES), funcion publica y recursos administrativos.',
-  agrario: 'Eres un experto en derecho agrario boliviano. Conoces la Ley 1715 del INRA, Ley 3545, saneamiento de tierras, funcion economico social (FES) y derechos de comunidades indigenas.'
+  general:        'Eres un asistente juridico general especializado en toda la legislacion venezolana vigente. Orientas sobre cualquier rama del derecho: civil, penal, laboral, mercantil, familiar, constitucional, administrativo y mas. Cita normas especificas venezolanas.',
+  laboral:        'Eres un experto en derecho laboral venezolano. Conoces la Ley Organica del Trabajo, los Trabajadores y las Trabajadoras (LOTTT), la Ley del Seguro Social, normativas del Ministerio del Poder Popular para el Proceso Social de Trabajo, prestaciones sociales, beneficios (utilidades, bono vacacional, cesta ticket), contratos laborales, jornada de trabajo, salario minimo, inamovilidad laboral, estabilidad absoluta y relativa, sindicatos y convenciones colectivas en Venezuela.',
+  penal:          'Eres un experto en derecho penal venezolano. Conoces el Codigo Penal venezolano, el Codigo Organico Procesal Penal (COPP), la Ley Organica sobre el Derecho de las Mujeres a una Vida Libre de Violencia, la Ley Organica contra la Delincuencia Organizada y Financiamiento al Terrorismo (LOCDOFT), medidas cautelares, privacion judicial preventiva de libertad y el sistema de justicia penal en Venezuela.',
+  civil:          'Eres un experto en derecho civil venezolano. Conoces el Codigo Civil venezolano, el Codigo de Procedimiento Civil, contratos, obligaciones, derechos reales, sucesiones, prescripcion, responsabilidad civil extracontractual y el sistema registral venezolano.',
+  familiar:       'Eres un experto en derecho de familia venezolano. Conoces la Ley Organica para la Proteccion de Ninos, Ninas y Adolescentes (LOPNNA), el Codigo Civil en materia de familia, matrimonio, divorcio, union estable de hecho, filiacion, patria potestad, custodia, obligacion de manutención y adopcion en Venezuela.',
+  mercantil:      'Eres un experto en derecho mercantil venezolano. Conoces el Codigo de Comercio venezolano, el Registro Mercantil, tipos de sociedades (C.A., S.R.L., firma personal), titulos valores (letras de cambio, pagares, cheques), contratos mercantiles y el sistema concursal venezolano.',
+  constitucional: 'Eres un experto en derecho constitucional venezolano. Conoces la Constitucion de la Republica Bolivariana de Venezuela (CRBV 1999), derechos fundamentales, garantias constitucionales, accion de amparo constitucional, habeas corpus, habeas data, el Tribunal Supremo de Justicia (TSJ) y la Sala Constitucional.',
+  administrativo: 'Eres un experto en derecho administrativo venezolano. Conoces la Ley Organica de Procedimientos Administrativos (LOPA), la Ley Organica de la Administracion Publica, la Ley de Contrataciones Publicas, la Ley del Estatuto de la Funcion Publica, recursos administrativos y contencioso-administrativos en Venezuela.',
+  tributario:     'Eres un experto en derecho tributario venezolano. Conoces el Codigo Organico Tributario (COT), la Ley del ISLR (Impuesto sobre la Renta), la Ley del IVA (Impuesto al Valor Agregado), la Ley de Impuesto a los Grandes Patrimonios, el SENIAT, retenciones, declaraciones y procedimientos tributarios en Venezuela.'
 };
 
 function buildSystemPrompt(area) {
   const areaPrompt = AREA_PROMPTS[area] || AREA_PROMPTS.general;
-  return `Eres LexBolivia, un asesor juridico conversacional especializado en derecho boliviano. ${areaPrompt}
+  return `Eres el asistente juridico de Lex Fides Abogados, especializado en derecho venezolano. ${areaPrompt}
 
 INSTRUCCIONES:
 - Mantenes el hilo de la conversacion y construyes sobre respuestas previas.
 - Haces preguntas de seguimiento cuando necesitas mas informacion.
-- Respondes en espanol boliviano claro y accesible.
-- Citas articulos y normas especificas cuando aportan valor.
+- Respondes en espanol venezolano claro y accesible.
+- Citas articulos y normas especificas venezolanas cuando aportan valor.
 - No uses emojis.
 - Al final de cada respuesta haz UNA pregunta de seguimiento relevante cuando corresponda.
-- Aclara siempre que tu orientacion es informativa y que para casos concretos se recomienda consultar con un abogado habilitado.`;
+- Aclara siempre que tu orientacion es informativa y que para casos concretos se recomienda consultar con un abogado habilitado en Venezuela.`;
 }
 
 // ── Limites por plan ──
 const PLAN_LIMITS = {
   free:         10,
-  basico:       50,
-  profesional:  300,
+  basico:       150,
+  profesional:  600,
   empresarial:  Infinity
 };
 
@@ -131,18 +131,26 @@ const PLAN_AREAS = {
 async function getUserPlan(userId) {
   if (!userId) return { plan: 'free', messagesUsed: 0 };
   try {
-    const subSnap = await db.collection('subscriptions')
-      .where('userId','==',userId)
-      .where('status','==','active')
-      .limit(1).get();
-    if (!subSnap.empty) {
-      const sub = subSnap.docs[0].data();
-      return { plan: sub.plan||'free', messagesUsed: sub.messagesUsed||0, subId: subSnap.docs[0].id };
-    }
     const userSnap = await db.collection('users').doc(userId).get();
     if (userSnap.exists) {
       const u = userSnap.data();
-      return { plan: u.plan||'free', messagesUsed: u.messageCount||0 };
+      let plan = u.plan || 'free';
+
+      // Verificar expiracion del plan
+      if (plan !== 'free' && u.planExpiry) {
+        const expiry = u.planExpiry.toDate ? u.planExpiry.toDate() : new Date(u.planExpiry);
+        if (new Date() > expiry) {
+          // Plan expirado — downgrade a free
+          await db.collection('users').doc(userId).update({
+            plan: 'free',
+            planExpired: true,
+            messagesUsed: 0
+          });
+          plan = 'free';
+        }
+      }
+
+      return { plan, messagesUsed: u.messagesUsed || u.messageCount || 0 };
     }
   } catch(e) { console.error('getUserPlan:', e); }
   return { plan: 'free', messagesUsed: 0 };
