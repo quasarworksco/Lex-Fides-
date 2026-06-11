@@ -1,1 +1,1177 @@
-placeholder
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lex Fides Abogados — Asistente Juridico con IA para Venezuela</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:       #0A1F3C;
+  --navy-mid:   #143260;
+  --navy-light: #1B4080;
+  --gold:       #B8860B;
+  --gold-bright:#D4A017;
+  --gold-pale:  #FBF4DC;
+  --bg:         #EDEAE3;
+  --surface:    #FFFFFF;
+  --surface-alt:#F7F6F2;
+  --border:     rgba(10,31,60,0.09);
+  --text:       #0D1B2A;
+  --text-muted: #6B7A8D;
+  --green:      #16A34A;
+  --radius:     18px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;max-width:100vw}
+a{text-decoration:none;color:inherit}
+
+/* ── SCROLL ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-50px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(50px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+@media(max-width:640px){
+  .reveal-left,.reveal-right{transform:translateY(30px)}
+  .reveal-left.visible,.reveal-right.visible{transform:translateY(0)}
+}
+.reveal-scale{opacity:0;transform:scale(0.88);transition:opacity 0.6s ease,transform 0.6s ease}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+.delay-1{transition-delay:0.1s}
+.delay-2{transition-delay:0.2s}
+.delay-3{transition-delay:0.3s}
+.delay-4{transition-delay:0.4s}
+.delay-5{transition-delay:0.5s}
+.delay-6{transition-delay:0.6s}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:0 28px;height:68px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background 0.3s,box-shadow 0.3s;
+  background:transparent;
+}
+nav.scrolled{
+  background:rgba(10,31,60,0.97);
+  backdrop-filter:blur(16px);
+  box-shadow:0 2px 24px rgba(0,0,0,0.25);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.nav-inner{max-width:1160px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:12px}
+.nav-logo-mark{
+  width:40px;height:40px;border-radius:11px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-bright));
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(184,134,11,0.45);
+  transition:transform 0.2s;
+}
+.nav-logo-mark:hover{transform:rotate(-5deg) scale(1.05)}
+.nav-logo-mark svg{width:21px;height:21px;fill:var(--navy)}
+.nav-logo-text{font-family:'Libre Baskerville',serif;font-size:19px;color:#fff;font-weight:700;letter-spacing:-0.01em}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:14px;color:rgba(255,255,255,0.65);font-weight:500;transition:color 0.18s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--gold-bright);transform:scaleX(0);transition:transform 0.2s}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-login{font-size:13px;color:rgba(255,255,255,0.65);font-weight:500;padding:8px 16px;border-radius:9px;transition:all 0.18s;border:1px solid rgba(255,255,255,0.15)}
+.nav-login:hover{color:#fff;border-color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.08)}
+.nav-cta{
+  background:linear-gradient(135deg,var(--gold),var(--gold-bright));color:var(--navy);
+  padding:9px 22px;border-radius:10px;font-size:13px;font-weight:700;
+  font-family:'Inter',sans-serif;border:none;cursor:pointer;transition:all 0.2s;
+  box-shadow:0 4px 14px rgba(184,134,11,0.4);
+}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(184,134,11,0.5)}
+.nav-menu-btn{display:none;background:none;border:none;cursor:pointer}
+.nav-menu-btn svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round}
+#mobile-menu{
+  display:none;flex-direction:column;gap:0;
+  position:fixed;top:68px;left:0;right:0;z-index:199;
+  background:rgba(10,31,60,0.98);backdrop-filter:blur(16px);
+  border-top:1px solid rgba(255,255,255,0.07);
+}
+#mobile-menu.open{display:flex}
+#mobile-menu a{padding:14px 28px;font-size:15px;color:rgba(255,255,255,0.70);border-bottom:1px solid rgba(255,255,255,0.05);font-weight:500;transition:color 0.15s}
+#mobile-menu a:hover{color:#fff}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  padding:100px 24px 80px;
+}
+
+/* Foto de fondo */
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1600&q=80&auto=format');
+  background-size:cover;background-position:center 30%;
+  transform:scale(1.05);
+  animation:heroZoom 20s ease-in-out infinite alternate;
+}
+@keyframes heroZoom{from{transform:scale(1.05)}to{transform:scale(1.12)}}
+
+/* Overlay degradado sobre la foto */
+.hero-overlay{
+  position:absolute;inset:0;z-index:1;
+  background:
+    linear-gradient(180deg,
+      rgba(10,31,60,0.85) 0%,
+      rgba(10,31,60,0.70) 40%,
+      rgba(10,31,60,0.88) 100%);
+}
+
+/* Particulas flotantes */
+.hero-particles{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.particle{
+  position:absolute;border-radius:50%;
+  background:rgba(212,160,23,0.15);
+  animation:float linear infinite;
+}
+.particle:nth-child(1){width:4px;height:4px;left:10%;animation-duration:15s;animation-delay:0s}
+.particle:nth-child(2){width:6px;height:6px;left:25%;animation-duration:18s;animation-delay:2s;background:rgba(255,255,255,0.08)}
+.particle:nth-child(3){width:3px;height:3px;left:40%;animation-duration:12s;animation-delay:4s}
+.particle:nth-child(4){width:5px;height:5px;left:60%;animation-duration:20s;animation-delay:1s;background:rgba(255,255,255,0.06)}
+.particle:nth-child(5){width:4px;height:4px;left:75%;animation-duration:16s;animation-delay:3s}
+.particle:nth-child(6){width:7px;height:7px;left:88%;animation-duration:14s;animation-delay:5s;background:rgba(212,160,23,0.1)}
+@keyframes float{
+  0%{bottom:-10px;opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{bottom:110%;opacity:0}
+}
+
+/* Lineas decorativas */
+.hero-lines{position:absolute;inset:0;z-index:2;pointer-events:none}
+.hero-lines::before{
+  content:'';position:absolute;
+  top:15%;left:50%;transform:translateX(-50%);
+  width:1px;height:80px;
+  background:linear-gradient(180deg,transparent,rgba(212,160,23,0.4),transparent);
+  animation:lineGlow 3s ease-in-out infinite;
+}
+@keyframes lineGlow{0%,100%{opacity:0.3}50%{opacity:1}}
+
+.hero-content{position:relative;z-index:3;text-align:center;max-width:900px}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(184,134,11,0.15);border:1px solid rgba(184,134,11,0.35);
+  border-radius:30px;padding:8px 20px;margin-bottom:32px;
+  font-size:12px;font-weight:700;color:var(--gold-bright);
+  text-transform:uppercase;letter-spacing:0.1em;
+  animation:badgePulse 3s ease-in-out infinite;
+}
+.hero-badge-dot{width:7px;height:7px;background:var(--gold-bright);border-radius:50%;animation:pulse-dot 2s ease-in-out infinite}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(184,134,11,0)}50%{box-shadow:0 0 0 6px rgba(184,134,11,0.08)}}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 0 2px rgba(212,160,23,0.3)}50%{box-shadow:0 0 0 5px rgba(212,160,23,0.1)}}
+
+.hero-eyebrow{
+  font-size:13px;font-weight:600;color:var(--gold-bright);
+  text-transform:uppercase;letter-spacing:0.15em;margin-bottom:16px;
+  opacity:0;animation:fadeUp 0.8s ease 0.3s forwards;
+}
+
+.hero h1{
+  font-family:'Libre Baskerville',serif;
+  font-size:clamp(36px,6.5vw,72px);
+  font-weight:700;color:#fff;line-height:1.08;
+  margin-bottom:24px;letter-spacing:-0.02em;
+  opacity:0;animation:fadeUp 0.9s ease 0.5s forwards;
+}
+.hero h1 em{font-style:normal;color:var(--gold-bright);position:relative}
+.hero h1 em::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold-bright),transparent);
+  animation:lineSlide 2s ease 1.4s forwards;transform:scaleX(0);transform-origin:left;
+}
+@keyframes lineSlide{to{transform:scaleX(1)}}
+
+.hero-sub{
+  font-size:clamp(16px,2.2vw,20px);color:rgba(255,255,255,0.62);
+  max-width:640px;margin:0 auto 44px;line-height:1.7;
+  opacity:0;animation:fadeUp 0.9s ease 0.7s forwards;
+}
+
+.hero-actions{
+  display:flex;flex-wrap:wrap;gap:14px;justify-content:center;
+  opacity:0;animation:fadeUp 0.9s ease 0.9s forwards;
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--gold),var(--gold-bright));
+  color:var(--navy);padding:16px 34px;border-radius:14px;
+  font-size:15px;font-weight:700;font-family:'Inter',sans-serif;
+  border:none;cursor:pointer;transition:all 0.25s;
+  box-shadow:0 6px 24px rgba(184,134,11,0.45);
+  display:inline-flex;align-items:center;gap:9px;
+  position:relative;overflow:hidden;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.2),transparent);
+  opacity:0;transition:opacity 0.2s;
+}
+.btn-primary:hover::before{opacity:1}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(184,134,11,0.55)}
+.btn-primary svg{width:17px;height:17px;fill:var(--navy);transition:transform 0.2s}
+.btn-primary:hover svg{transform:translateX(2px)}
+
+.btn-secondary{
+  background:rgba(255,255,255,0.08);color:#fff;
+  border:1px solid rgba(255,255,255,0.22);padding:16px 28px;border-radius:14px;
+  font-size:15px;font-weight:600;font-family:'Inter',sans-serif;
+  cursor:pointer;transition:all 0.2s;
+  display:inline-flex;align-items:center;gap:9px;
+  backdrop-filter:blur(8px);
+}
+.btn-secondary:hover{background:rgba(255,255,255,0.14);border-color:rgba(255,255,255,0.35);transform:translateY(-2px)}
+.btn-secondary svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+
+/* Hero stats */
+.hero-stats{
+  display:flex;gap:0;margin-top:64px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:20px;padding:0;overflow:hidden;
+  backdrop-filter:blur(8px);
+  opacity:0;animation:fadeUp 0.9s ease 1.1s forwards;
+}
+.hero-stat{
+  flex:1;padding:20px 28px;text-align:center;
+  border-right:1px solid rgba(255,255,255,0.08);
+  position:relative;transition:background 0.2s;
+}
+.hero-stat:last-child{border-right:none}
+.hero-stat:hover{background:rgba(255,255,255,0.05)}
+.hero-stat-val{font-size:28px;font-weight:800;color:#fff;line-height:1}
+.hero-stat-val span{color:var(--gold-bright)}
+.hero-stat-label{font-size:11px;color:rgba(255,255,255,0.45);margin-top:5px;text-transform:uppercase;letter-spacing:0.07em;font-weight:600}
+
+/* Scroll indicator */
+.scroll-indicator{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0;animation:fadeIn 1s ease 1.8s forwards;
+  cursor:pointer;
+}
+.scroll-indicator span{font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;font-weight:600}
+.scroll-mouse{
+  width:24px;height:36px;border:1.5px solid rgba(255,255,255,0.25);
+  border-radius:12px;display:flex;justify-content:center;padding-top:6px;
+}
+.scroll-wheel{
+  width:3px;height:6px;background:var(--gold-bright);border-radius:3px;
+  animation:scrollWheel 2s ease-in-out infinite;
+}
+@keyframes scrollWheel{0%{transform:translateY(0);opacity:1}100%{transform:translateY(8px);opacity:0}}
+@keyframes fadeIn{to{opacity:1}}
+
+/* ── TRUSTED BY ── */
+.trusted{
+  background:var(--navy);padding:24px;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+.trusted-inner{max-width:1160px;margin:0 auto;display:flex;align-items:center;gap:32px;flex-wrap:wrap;justify-content:center}
+.trusted-label{font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.1em;font-weight:600;white-space:nowrap}
+.trusted-items{display:flex;gap:28px;align-items:center;flex-wrap:wrap;justify-content:center}
+.trusted-item{font-size:13px;color:rgba(255,255,255,0.3);font-weight:600;display:flex;align-items:center;gap:7px}
+.trusted-item svg{width:16px;height:16px;fill:rgba(255,255,255,0.2)}
+
+/* ── SECTIONS ── */
+section{padding:96px 24px}
+.container{max-width:1160px;margin:0 auto}
+.section-label{font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:12px}
+.section-title{font-family:'Libre Baskerville',serif;font-size:clamp(26px,4vw,42px);font-weight:700;color:var(--navy);line-height:1.18;margin-bottom:16px}
+.section-sub{font-size:16px;color:var(--text-muted);line-height:1.75;max-width:560px}
+.section-head{margin-bottom:56px}
+.section-head.centered{text-align:center}
+.section-head.centered .section-sub{margin:0 auto}
+
+/* ── FEATURES ── */
+.features-bg{background:var(--surface)}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.feat-card{
+  padding:32px 28px;border-radius:22px;
+  background:var(--surface-alt);border:1px solid var(--border);
+  transition:transform 0.3s,box-shadow 0.3s,border-color 0.3s;
+  position:relative;overflow:hidden;
+}
+.feat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--navy),var(--navy-light));
+  transform:scaleX(0);transform-origin:left;transition:transform 0.3s;
+}
+.feat-card:hover::before{transform:scaleX(1)}
+.feat-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(10,31,60,0.12);border-color:rgba(10,31,60,0.15)}
+.feat-icon{
+  width:54px;height:54px;border-radius:15px;
+  background:linear-gradient(135deg,var(--navy),var(--navy-light));
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:22px;box-shadow:0 6px 18px rgba(10,31,60,0.22);
+  transition:transform 0.3s;
+}
+.feat-card:hover .feat-icon{transform:scale(1.08) rotate(-3deg)}
+.feat-icon svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round}
+.feat-icon.gold{background:linear-gradient(135deg,var(--gold),var(--gold-bright))}
+.feat-icon.gold svg{stroke:var(--navy)}
+.feat-title{font-size:17px;font-weight:700;color:var(--navy);margin-bottom:10px}
+.feat-text{font-size:14px;color:var(--text-muted);line-height:1.75}
+
+/* ── SPLIT SECTION ── */
+.split-bg{background:var(--bg)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.split-img{
+  border-radius:24px;overflow:hidden;position:relative;
+  box-shadow:0 24px 64px rgba(10,31,60,0.18);
+}
+.split-img img{width:100%;height:400px;object-fit:cover;display:block;transition:transform 0.6s ease}
+.split-img:hover img{transform:scale(1.04)}
+.split-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(10,31,60,0.3),transparent);
+}
+.split-img-badge{
+  position:absolute;bottom:20px;left:20px;
+  background:rgba(10,31,60,0.85);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.12);border-radius:12px;
+  padding:12px 16px;display:flex;align-items:center;gap:10px;
+}
+.split-img-badge svg{width:20px;height:20px;fill:var(--gold-bright)}
+.split-img-badge span{font-size:12px;font-weight:600;color:#fff}
+
+.split-content .section-label{margin-bottom:10px}
+.split-list{display:flex;flex-direction:column;gap:14px;margin-top:28px}
+.split-item{display:flex;align-items:flex-start;gap:14px}
+.split-item-icon{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:rgba(10,31,60,0.06);
+  display:flex;align-items:center;justify-content:center;
+  margin-top:2px;
+}
+.split-item-icon svg{width:16px;height:16px;fill:var(--navy-light)}
+.split-item-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:3px}
+.split-item-text{font-size:13px;color:var(--text-muted);line-height:1.6}
+
+/* ── AREAS ── */
+.areas-bg{background:var(--navy);position:relative;overflow:hidden}
+.areas-bg::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(184,134,11,0.07) 0%,transparent 70%);
+}
+.areas-bg .section-title{color:#fff}
+.areas-bg .section-sub{color:rgba(255,255,255,0.5)}
+.areas-bg .section-label{color:var(--gold-bright)}
+.areas-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;position:relative;z-index:1}
+.area-pill{
+  display:flex;align-items:center;gap:14px;
+  padding:18px 20px;border-radius:16px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);
+  transition:all 0.25s;cursor:default;
+}
+.area-pill:hover{background:rgba(255,255,255,0.10);border-color:rgba(212,160,23,0.3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+.area-pill-icon{
+  width:42px;height:42px;border-radius:11px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(184,134,11,0.2),rgba(212,160,23,0.1));
+  border:1px solid rgba(184,134,11,0.25);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.2s;
+}
+.area-pill:hover .area-pill-icon{transform:rotate(-5deg) scale(1.05)}
+.area-pill-icon svg{width:18px;height:18px;fill:var(--gold-bright)}
+.area-pill-name{font-size:14px;font-weight:700;color:#fff;margin-bottom:2px}
+.area-pill-desc{font-size:11.5px;color:rgba(255,255,255,0.45)}
+
+/* ── HOW IT WORKS ── */
+.how-bg{background:var(--surface)}
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;position:relative}
+.how-connector{
+  position:absolute;top:36px;left:12.5%;right:12.5%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(184,134,11,0.25),rgba(184,134,11,0.25),transparent);
+  pointer-events:none;
+}
+.how-step{text-align:center;position:relative;z-index:1}
+.how-num{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--navy),var(--navy-mid));
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+  font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:var(--gold-bright);
+  box-shadow:0 8px 24px rgba(10,31,60,0.25);
+  transition:transform 0.3s,box-shadow 0.3s;
+  position:relative;
+}
+.how-num::before{
+  content:'';position:absolute;inset:-3px;border-radius:50%;
+  border:1px solid rgba(184,134,11,0.2);
+  animation:numRing 3s ease-in-out infinite;
+}
+@keyframes numRing{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.06);opacity:1}}
+.how-step:hover .how-num{transform:translateY(-4px);box-shadow:0 14px 32px rgba(10,31,60,0.30)}
+.how-title{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:10px}
+.how-text{font-size:13px;color:var(--text-muted);line-height:1.7}
+
+/* ── PRICING ── */
+.pricing-bg{
+  background:var(--bg);position:relative;overflow:hidden;
+}
+.pricing-bg::before{
+  content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);
+  width:800px;height:800px;border-radius:50%;
+  background:radial-gradient(circle,rgba(184,134,11,0.04) 0%,transparent 70%);
+  pointer-events:none;
+}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start;position:relative;z-index:1}
+.price-card{
+  background:var(--surface);border-radius:24px;
+  border:1.5px solid var(--border);overflow:hidden;
+  transition:transform 0.3s,box-shadow 0.3s;
+  position:relative;
+}
+.price-card:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(10,31,60,0.14)}
+.price-card.featured{
+  border-color:var(--navy);border-width:2px;
+  transform:scale(1.04);
+  box-shadow:0 24px 64px rgba(10,31,60,0.18);
+}
+.price-card.featured:hover{transform:scale(1.04) translateY(-6px)}
+.price-tag{
+  position:absolute;top:20px;right:20px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-bright));color:var(--navy);
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;
+  padding:4px 11px;border-radius:8px;
+  box-shadow:0 3px 10px rgba(184,134,11,0.35);
+}
+.price-header{padding:28px 28px 20px;border-bottom:1px solid var(--border)}
+.price-plan{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:8px}
+.price-plan.gold{color:var(--gold)}
+.price-name{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:14px}
+.price-amount{display:flex;align-items:flex-end;gap:4px;margin-bottom:4px}
+.price-currency{font-size:18px;font-weight:700;color:var(--navy);padding-bottom:6px}
+.price-number{font-size:52px;font-weight:800;color:var(--navy);line-height:1}
+.price-period{font-size:14px;color:var(--text-muted);padding-bottom:9px}
+.price-desc{font-size:13px;color:var(--text-muted);line-height:1.6}
+.price-body{padding:24px 28px 28px}
+.price-limit{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface-alt);border-radius:10px;
+  padding:12px 14px;margin-bottom:20px;border:1px solid var(--border);
+}
+.price-limit svg{width:15px;height:15px;flex-shrink:0;fill:var(--gold)}
+.price-limit-text{font-size:12.5px;color:var(--text)}
+.price-limit-text strong{color:var(--navy)}
+.price-features{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.price-feat{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--text)}
+.price-feat svg{width:16px;height:16px;flex-shrink:0;margin-top:1px}
+.price-feat.check svg{fill:var(--green)}
+.price-feat.cross svg{fill:#CBD5E1}
+.price-feat.cross span{color:var(--text-muted)}
+.price-btn{
+  width:100%;padding:14px;border-radius:12px;
+  font-size:14px;font-weight:700;font-family:'Inter',sans-serif;
+  cursor:pointer;border:none;transition:all 0.2s;
+}
+.price-btn.primary{
+  background:linear-gradient(135deg,var(--navy),var(--navy-mid));color:#fff;
+  box-shadow:0 4px 16px rgba(10,31,60,0.22);
+}
+.price-btn.primary:hover{box-shadow:0 8px 24px rgba(10,31,60,0.30);transform:translateY(-1px)}
+.price-btn.gold-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold-bright));color:var(--navy);
+  box-shadow:0 4px 16px rgba(184,134,11,0.35);
+}
+.price-btn.gold-btn:hover{box-shadow:0 8px 24px rgba(184,134,11,0.45);transform:translateY(-1px)}
+.price-btn.outline{background:transparent;color:var(--navy);border:2px solid var(--border)}
+.price-btn.outline:hover{border-color:var(--navy);background:rgba(10,31,60,0.04)}
+
+/* ── TESTIMONIALS ── */
+.testi-bg{background:var(--surface);overflow:hidden}
+.testi-track-wrap{overflow:hidden;margin:0 -24px;padding:0 24px}
+.testi-track{
+  display:flex;gap:20px;
+  animation:scrollTrack 30s linear infinite;
+  width:max-content;
+}
+.testi-track:hover{animation-play-state:paused}
+@keyframes scrollTrack{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.testi-card{
+  width:340px;flex-shrink:0;
+  padding:28px;border-radius:20px;
+  background:var(--surface-alt);border:1px solid var(--border);
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.testi-card:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(10,31,60,0.10)}
+.testi-stars{color:var(--gold-bright);font-size:14px;margin-bottom:14px;letter-spacing:2px}
+.testi-text{font-size:14px;color:var(--text);line-height:1.72;margin-bottom:18px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,var(--navy),var(--navy-light));
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.testi-name{font-size:13px;font-weight:600;color:var(--navy)}
+.testi-role{font-size:11.5px;color:var(--text-muted)}
+
+/* ── FAQ ── */
+.faq-bg{background:var(--bg)}
+.faq-list{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.faq-item{background:var(--surface);border-radius:16px;border:1px solid var(--border);overflow:hidden;transition:box-shadow 0.2s}
+.faq-item.open{box-shadow:0 8px 28px rgba(10,31,60,0.09)}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 24px;cursor:pointer;gap:16px;
+  font-size:14px;font-weight:600;color:var(--navy);
+  transition:color 0.18s;
+}
+.faq-q:hover{color:var(--navy-light)}
+.faq-icon{
+  width:30px;height:30px;border-radius:8px;flex-shrink:0;
+  background:var(--surface-alt);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.25s;
+}
+.faq-icon svg{width:14px;height:14px;fill:none;stroke:var(--text-muted);stroke-width:2.5;stroke-linecap:round;transition:transform 0.25s}
+.faq-item.open .faq-icon{background:var(--navy);border-color:var(--navy)}
+.faq-item.open .faq-icon svg{stroke:#fff;transform:rotate(45deg)}
+.faq-a{
+  max-height:0;overflow:hidden;
+  font-size:13.5px;color:var(--text-muted);line-height:1.75;
+  transition:max-height 0.35s ease,padding 0.35s ease;
+}
+.faq-item.open .faq-a{max-height:300px;padding:0 24px 20px}
+
+/* ── CTA ── */
+.cta-section{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 50%,#0D2548 100%);
+  padding:100px 24px;text-align:center;position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 80% at 50% 100%,rgba(184,134,11,0.09) 0%,transparent 70%);
+}
+.cta-glow{
+  position:absolute;top:-100px;left:50%;transform:translateX(-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(184,134,11,0.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.cta-section h2{
+  font-family:'Libre Baskerville',serif;
+  font-size:clamp(28px,4vw,48px);font-weight:700;color:#fff;
+  margin-bottom:16px;position:relative;z-index:1;
+}
+.cta-section p{font-size:18px;color:rgba(255,255,255,0.52);margin-bottom:40px;position:relative;z-index:1}
+.cta-section .btn-primary{position:relative;z-index:1;font-size:16px;padding:18px 38px}
+
+/* ── FOOTER ── */
+footer{background:var(--navy);padding:56px 24px 32px;border-top:1px solid rgba(255,255,255,0.06)}
+.footer-inner{
+  max-width:1160px;margin:0 auto;
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;
+}
+.footer-brand p{font-size:13px;color:rgba(255,255,255,0.38);line-height:1.75;margin-top:14px;max-width:280px}
+.footer-col h4{font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px}
+.footer-col a{display:block;font-size:13px;color:rgba(255,255,255,0.42);margin-bottom:9px;transition:color 0.18s}
+.footer-col a:hover{color:rgba(255,255,255,0.85)}
+.footer-bottom{
+  max-width:1160px;margin:0 auto;
+  padding-top:24px;border-top:1px solid rgba(255,255,255,0.07);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+}
+.footer-bottom p{font-size:12px;color:rgba(255,255,255,0.25)}
+
+/* ── COUNTER ── */
+.counter{display:inline-block}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .features-grid,.pricing-grid{grid-template-columns:repeat(2,1fr)}
+  .areas-grid{grid-template-columns:repeat(2,1fr)}
+  .how-steps{grid-template-columns:repeat(2,1fr)}
+  .how-connector{display:none}
+  .split{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  .price-card.featured{transform:none}
+  .price-card.featured:hover{transform:translateY(-6px)}
+  .hero-stats{flex-wrap:wrap}
+  .hero-stat{min-width:120px}
+}
+@media(max-width:640px){
+  /* Evitar desbordamiento lateral global */
+  html,body{overflow-x:hidden;max-width:100%}
+  section,div,.container{max-width:100%;word-break:break-word}
+
+  /* Nav */
+  nav{padding:0 16px}
+  .nav-inner{width:100%}
+  .nav-links,.nav-right{display:none}
+  .nav-menu-btn{display:block}
+
+  /* Hero */
+  .hero{padding:100px 16px 60px}
+  .hero-content{padding:0;width:100%}
+  h1{font-size:clamp(28px,8vw,48px);line-height:1.2}
+  .hero-sub{font-size:15px}
+  .hero-actions{flex-direction:column;align-items:stretch;gap:12px;width:100%}
+  .btn-primary,.btn-secondary{width:100%;justify-content:center;font-size:15px;padding:14px 20px}
+  .hero-stats{flex-direction:column;gap:0;width:100%;max-width:100%}
+  .hero-stat{padding:14px 16px;border-right:none;border-bottom:1px solid rgba(255,255,255,0.1);width:100%}
+  .hero-stat:last-child{border-bottom:none}
+
+  /* Secciones */
+  .section-header{padding:0 4px}
+  .section-title{font-size:clamp(22px,6vw,34px)}
+  .section-sub{font-size:14px}
+
+  /* Grids → columna unica */
+  .features-grid,.pricing-grid,.areas-grid,.how-steps{grid-template-columns:1fr;gap:14px}
+
+  /* Pricing */
+  .price-card{padding:24px 20px}
+  .price-card.featured{transform:none;border-width:2px}
+  .price-card.featured:hover{transform:none}
+
+  /* Split */
+  .split{grid-template-columns:1fr}
+  .split-img{height:240px;border-radius:16px}
+
+  /* Testimonios — ancho fijo ajustado */
+  .testi-card{width:calc(100vw - 48px);min-width:0;flex-shrink:0}
+
+  /* Areas */
+  .areas-grid{grid-template-columns:1fr 1fr}
+
+  /* FAQ */
+  .faq-q{font-size:14px;padding:16px}
+  .faq-a p{font-size:13px;padding:0 16px 16px}
+
+  /* Footer */
+  .footer-inner{grid-template-columns:1fr;gap:28px}
+  .footer-bottom{flex-direction:column;gap:8px;text-align:center}
+  .footer-bottom-links{flex-wrap:wrap;justify-content:center}
+
+  /* CTA final */
+  .cta-actions{flex-direction:column;align-items:center;gap:12px;width:100%}
+  .cta-actions .btn-primary,.cta-actions .btn-secondary{width:100%;max-width:320px;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>
+      </div>
+      <span class="nav-logo-text">Lex Fides Abogados</span>
+    </div>
+    <div class="nav-links">
+      <a href="#caracteristicas">Caracteristicas</a>
+      <a href="#areas">Areas</a>
+      <a href="#precios">Precios</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-right">
+      <a class="nav-login" href="index.html">Iniciar sesion</a>
+      <button class="nav-cta" onclick="window.location.href='index.html'">Comenzar gratis</button>
+    </div>
+    <button class="nav-menu-btn" onclick="toggleMobileMenu()">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+<div id="mobile-menu">
+  <a href="#caracteristicas">Caracteristicas</a>
+  <a href="#areas">Areas juridicas</a>
+  <a href="#precios">Precios</a>
+  <a href="#faq">Preguntas frecuentes</a>
+  <a href="index.html">Ir al asistente</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-particles">
+    <div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div>
+    <div class="particle"></div><div class="particle"></div>
+  </div>
+  <div class="hero-lines"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Especializado en Venezuela · Republica Bolivariana de Venezuela
+    </div>
+    <p class="hero-eyebrow">Asistencia juridica con inteligencia artificial</p>
+    <h1>Tu abogado digital<br>disponible <em>las 24 horas</em></h1>
+    <p class="hero-sub">Consulta sobre cualquier rama del derecho venezolano. Respuestas precisas con citas de articulos y normas especificas de la legislacion vigente.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="window.location.href='index.html'">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Consultar ahora — es gratis
+      </button>
+      <button class="btn-secondary" onclick="document.getElementById('como-funciona').scrollIntoView({behavior:'smooth'})">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        Ver como funciona
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-val"><span class="counter" data-target="9">0</span><span>+</span></div>
+        <div class="hero-stat-label">Areas del derecho</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">24<span>/7</span></div>
+        <div class="hero-stat-label">Disponibilidad</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">&lt;3<span>s</span></div>
+        <div class="hero-stat-label">Tiempo respuesta</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val"><span class="counter" data-target="100">0</span><span>%</span></div>
+        <div class="hero-stat-label">Derecho venezolano</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator" onclick="document.getElementById('caracteristicas').scrollIntoView({behavior:'smooth'})">
+    <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+    <span>Descubrir</span>
+  </div>
+</section>
+
+<!-- TRUSTED BY -->
+<div class="trusted">
+  <div class="trusted-inner">
+    <span class="trusted-label">Basado en</span>
+    <div class="trusted-items">
+      <span class="trusted-item"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg>CRBV 1999</span>
+      <span class="trusted-item"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>LOTTT</span>
+      <span class="trusted-item"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Codigo Penal</span>
+      <span class="trusted-item"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>LOPNNA</span>
+      <span class="trusted-item"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>COT / SENIAT</span>
+    </div>
+  </div>
+</div>
+
+<!-- CARACTERISTICAS -->
+<section class="features-bg" id="caracteristicas">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="section-label">Por que Lex Fides Abogados</div>
+      <h2 class="section-title">Todo lo que necesitas para entender<br>el derecho venezolano</h2>
+      <p class="section-sub">Una plataforma disenada especificamente para la legislacion del Republica Bolivariana de Venezuela.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card reveal delay-1">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg></div>
+        <div class="feat-title">100% legislacion venezolana</div>
+        <div class="feat-text">Entrenado exclusivamente con la CPE 2009, codigos y leyes vigentes del Republica Bolivariana de Venezuela. No respuestas genericas.</div>
+      </div>
+      <div class="feat-card reveal delay-2">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+        <div class="feat-title">Biblioteca juridica integrada</div>
+        <div class="feat-text">Accede a los principales codigos y leyes. Lee articulos clave y consulta al asistente con un clic desde la misma pantalla.</div>
+      </div>
+      <div class="feat-card reveal delay-3">
+        <div class="feat-icon gold"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <div class="feat-title">Conversacion con memoria</div>
+        <div class="feat-text">El asistente recuerda tu caso, hace preguntas de seguimiento y profundiza en tu situacion especifica como un abogado real.</div>
+      </div>
+      <div class="feat-card reveal delay-1">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <div class="feat-title">Respuestas en segundos</div>
+        <div class="feat-text">Tiempo promedio de 2-3 segundos. Sin esperas, sin turnos, sin citas. Disponible los 365 dias del ano las 24 horas.</div>
+      </div>
+      <div class="feat-card reveal delay-2">
+        <div class="feat-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="feat-title">9 areas especializadas</div>
+        <div class="feat-text">Asistentes especializados por area: Laboral, Penal, Civil, Familiar, Comercial, Constitucional, Administrativo, Agrario y General.</div>
+      </div>
+      <div class="feat-card reveal delay-3">
+        <div class="feat-icon gold"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="feat-title">Privacidad garantizada</div>
+        <div class="feat-text">Tus consultas son confidenciales. Datos cifrados en transito y en reposo. Tu informacion juridica nunca se comparte.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPLIT: BIBLIOTECA -->
+<section class="split-bg">
+  <div class="container">
+    <div class="split">
+      <div class="split-img reveal-left">
+        <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&q=80&auto=format" alt="Biblioteca juridica venezolana">
+        <div class="split-img-overlay"></div>
+        <div class="split-img-badge">
+          <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          <span>13 normas venezolanas</span>
+        </div>
+      </div>
+      <div class="split-content reveal-right">
+        <div class="section-label">Biblioteca juridica</div>
+        <h2 class="section-title">Todos los codigos venezolanos en un solo lugar</h2>
+        <p style="font-size:15px;color:var(--text-muted);line-height:1.75">Accede a los articulos clave de cada ley, lee resumenes claros y consulta directamente al asistente sobre cualquier norma.</p>
+        <div class="split-list">
+          <div class="split-item">
+            <div class="split-item-icon"><svg viewBox="0 0 16 16"><path d="M8 1L1 4v2h14V4L8 1z"/></svg></div>
+            <div><div class="split-item-title">CPE 2009 y garantias constitucionales</div><div class="split-item-text">Accion de amparo, accion de libertad, derechos fundamentales y estructura del Estado.</div></div>
+          </div>
+          <div class="split-item">
+            <div class="split-item-icon"><svg viewBox="0 0 16 16"><path d="M6 2a1 1 0 00-1 1v1H3a1 1 0 00-1 1v8h12V5a1 1 0 00-1-1h-2V3a1 1 0 00-1-1H6z"/></svg></div>
+            <div><div class="split-item-title">Ley General del Trabajo y beneficios</div><div class="split-item-text">Desahucio, indemnizacion, aguinaldo, inamovilidad y salario minimo.</div></div>
+          </div>
+          <div class="split-item">
+            <div class="split-item-icon"><svg viewBox="0 0 16 16"><path d="M8 1l7 3.5V8c0 3.6-2.6 7-7 8C1.6 15-1 11.6-1 8V4.5L8 1z"/></svg></div>
+            <div><div class="split-item-title">Codigo Penal y Procedimiento Penal</div><div class="split-item-text">Tipos penales, penas, medidas cautelares y detencion preventiva.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AREAS -->
+<section class="areas-bg" id="areas">
+  <div class="container">
+    <div class="section-head centered reveal">
+      <div class="section-label">Cobertura juridica</div>
+      <h2 class="section-title">9 areas del derecho venezolano</h2>
+      <p class="section-sub">Cada area tiene un asistente especializado con conocimiento profundo de la normativa vigente.</p>
+    </div>
+    <div class="areas-grid">
+      <div class="area-pill reveal delay-1">
+        <div class="area-pill-icon"><svg viewBox="0 0 16 16"><path d="M2 3h12v1H2zm0 3h12v1H2zm0 3h8v1H2z"/></svg></div>
+        <div><div class="area-pill-name">General</div><div class="area-pill-desc">Orientacion multidisciplinaria</div></div>
+      </div>
+      <div class="area-pill reveal delay-2">
+        <div class="area-pill-icon"><svg viewBox="0 0 16 16"><path d="M6 2a1 1 0 00-1 1v1H3a1 1 0 00-1 1v8h12V5a1 1 0 00-1-1h-2V3a1 1 0 00-1-1H6z"/></svg></div>
+        <div><div class="area-pill-name">Laboral</div><div class="area-pill-desc">LGT, beneficios, despido</div></div>
+      </div>
+      <div class="area-pill reveal delay-3">
+        <div class="area-pill-icon"><svg viewBox="0 0 16 16"><path d="M8 1l7 3.5V8c0 3.6-2.6 7-7 8C1.6 15-1 11.6-1 8V4.5L8 1z"/></svg></div>
+        <div><div class="area-pill-name">Penal</div><div class="area-pill-desc">CP, CPP, medidas cautelares</div></div>
+      </div>
+      <div class="area-pill reveal delay-1">
+        <div class="area-pill-icon"><svg viewBox="0 0 16 16"><path d="M4 1h8a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V2a1 1 0 011-1z"/></svg></div>
+        <div><div class="area-pill-name">Civil</div><div class="area-pill-desc">Contratos, propiedad, herencia</div></div>
+      </div>
+      <div class="area-pill reveal delay-2">
+        <div class="area-pill-icon"><svg viewBox="0 0 16 16"><path d="M8 1a2.5 2.5 0 110 5A2.5 2.5 0 018 1zm-5 9c0-2.2 2.2-4 5-4s5 1.8 5 4v1H3v-1z"/></svg></div>
+        <div><div class="area-pill-name">Familiar</div><div class="area-pill-desc">LOPNNA, divorcio, manutension</div></div>
+      </div>
+      <div class="area-pill reveal delay-3">
+        <div class="area-pill-icon"><svg viewBox="0 0 16 16"><path d="M1 3h14v2H1zm1 3h12l-1 7H3L2 6z"/></svg></div>
+        <div><div class="area-pill-name">Mercantil</div><div class="area-pill-desc">Empresas, FUNDEMPRESA</div></div>
+      </div>
+      <div class="area-pill reveal delay-1">
+        <div class="area-pill-icon"><svg viewBox="0 0 16 16"><path d="M8 1L1 4v2h14V4L8 1zM2 7v5h2V7H2zm5 0v5h2V7H7zm5 0v5h2V7h-2zM1 13h14v2H1z"/></svg></div>
+        <div><div class="area-pill-name">Constitucional</div><div class="area-pill-desc">CPE, amparo, libertad</div></div>
+      </div>
+      <div class="area-pill reveal delay-2">
+        <div class="area-pill-icon"><svg viewBox="0 0 16 16"><path d="M3 2h10a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z"/></svg></div>
+        <div><div class="area-pill-name">Administrativo</div><div class="area-pill-desc">LOPA, funcion publica, recursos</div></div>
+      </div>
+      <div class="area-pill reveal delay-3">
+        <div class="area-pill-icon"><svg viewBox="0 0 16 16"><path d="M8 1C5 1 2 4 2 8s3 7 6 7 6-3 6-7-3-7-6-7z"/></svg></div>
+        <div><div class="area-pill-name">Agrario</div><div class="area-pill-desc">INRA, saneamiento, tierras</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-bg" id="como-funciona">
+  <div class="container">
+    <div class="section-head centered reveal">
+      <div class="section-label">Como funciona</div>
+      <h2 class="section-title">Tu orientacion juridica en 4 pasos</h2>
+      <p class="section-sub">Sin tramites, sin esperas. Desde el registro hasta la respuesta en minutos.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-connector"></div>
+      <div class="how-step reveal delay-1">
+        <div class="how-num">1</div>
+        <div class="how-title">Crea tu cuenta</div>
+        <div class="how-text">Registrate con tu correo o con Google en menos de 30 segundos. Acceso inmediato al plan gratuito.</div>
+      </div>
+      <div class="how-step reveal delay-2">
+        <div class="how-num">2</div>
+        <div class="how-title">Elige el area</div>
+        <div class="how-text">Selecciona entre las 9 areas del derecho venezolano segun el tema de tu consulta.</div>
+      </div>
+      <div class="how-step reveal delay-3">
+        <div class="how-num">3</div>
+        <div class="how-title">Describe tu caso</div>
+        <div class="how-text">El asistente hace preguntas de seguimiento para entender tu situacion y darte la mejor orientacion.</div>
+      </div>
+      <div class="how-step reveal delay-4">
+        <div class="how-num">4</div>
+        <div class="how-title">Recibe orientacion</div>
+        <div class="how-text">Respuestas con articulos y normas especificas. Consulta la biblioteca para profundizar.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRECIOS -->
+<section class="pricing-bg" id="precios">
+  <div class="container">
+    <div class="section-head centered reveal">
+      <div class="section-label">Planes y precios</div>
+      <h2 class="section-title">Elige el plan que necesitas</h2>
+      <p class="section-sub">Todos los planes incluyen Biblioteca Juridica completa. El alcance del chat se expande segun tu plan.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card reveal-left">
+        <div class="price-header">
+          <div class="price-plan">Plan</div>
+          <div class="price-name">Basico</div>
+          <div class="price-amount"><span class="price-currency">Bs</span><span class="price-number">49</span><span class="price-period">/mes</span></div>
+          <div class="price-desc">Ideal para consultas ocasionales en temas puntuales del derecho venezolano.</div>
+        </div>
+        <div class="price-body">
+          <div class="price-limit"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 110 14A7 7 0 018 1zm0 3v4l3 1.5-.7 1.4L7 9.3V4h1z"/></svg><div class="price-limit-text"><strong>50 mensajes/mes</strong></div></div>
+          <div class="price-features">
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>3 areas: General, Laboral, Civil</span></div>
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Biblioteca juridica completa</span></div>
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Historial de conversaciones</span></div>
+            <div class="price-feat cross"><svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg><span>Areas avanzadas (Penal, Familiar...)</span></div>
+            <div class="price-feat cross"><svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg><span>Soporte prioritario</span></div>
+          </div>
+          <button class="price-btn outline" onclick="window.location.href='index.html'">Comenzar con Basico</button>
+        </div>
+      </div>
+      <div class="price-card featured reveal">
+        <div class="price-tag">Mas popular</div>
+        <div class="price-header">
+          <div class="price-plan">Plan</div>
+          <div class="price-name">Profesional</div>
+          <div class="price-amount"><span class="price-currency">Bs</span><span class="price-number">149</span><span class="price-period">/mes</span></div>
+          <div class="price-desc">Para profesionales y quienes necesitan consultas frecuentes en todas las areas.</div>
+        </div>
+        <div class="price-body">
+          <div class="price-limit"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 110 14A7 7 0 018 1zm0 3v4l3 1.5-.7 1.4L7 9.3V4h1z"/></svg><div class="price-limit-text"><strong>300 mensajes/mes</strong></div></div>
+          <div class="price-features">
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Todas las 9 areas juridicas</span></div>
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Biblioteca juridica completa</span></div>
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Historial completo</span></div>
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Penal, Familiar, Constitucional</span></div>
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Agrario y Administrativo</span></div>
+            <div class="price-feat cross"><svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></svg><span>Mensajes ilimitados</span></div>
+          </div>
+          <button class="price-btn primary" onclick="window.location.href='index.html'">Comenzar con Profesional</button>
+        </div>
+      </div>
+      <div class="price-card reveal-right">
+        <div class="price-header">
+          <div class="price-plan gold">Plan</div>
+          <div class="price-name">Empresarial</div>
+          <div class="price-amount"><span class="price-currency">Bs</span><span class="price-number">399</span><span class="price-period">/mes</span></div>
+          <div class="price-desc">Para empresas y equipos que necesitan acceso ilimitado con soporte prioritario.</div>
+        </div>
+        <div class="price-body">
+          <div class="price-limit"><svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 110 14A7 7 0 018 1zm0 3v4l3 1.5-.7 1.4L7 9.3V4h1z"/></svg><div class="price-limit-text"><strong>Mensajes ilimitados</strong></div></div>
+          <div class="price-features">
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Todas las 9 areas juridicas</span></div>
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Mensajes ilimitados</span></div>
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Hasta 5 usuarios por cuenta</span></div>
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Soporte prioritario WhatsApp</span></div>
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Respuestas con mayor profundidad</span></div>
+            <div class="price-feat check"><svg viewBox="0 0 16 16"><path d="M2 8l4 4 8-8"/></svg><span>Biblioteca juridica completa</span></div>
+          </div>
+          <button class="price-btn gold-btn" onclick="window.location.href='index.html'">Comenzar con Empresarial</button>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:36px;font-size:13px;color:var(--text-muted);max-width:560px;margin-left:auto;margin-right:auto">Cancelacion en cualquier momento. Lex Fides Abogados ofrece orientacion informativa; no sustituye al asesoramiento de un abogado habilitado.</p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-bg">
+  <div class="container">
+    <div class="section-head centered reveal">
+      <div class="section-label">Lo que dicen nuestros usuarios</div>
+      <h2 class="section-title">Venezolanos que confian en Lex Fides Abogados</h2>
+    </div>
+  </div>
+  <div class="testi-track-wrap">
+    <div class="testi-track" id="testi-track">
+      <!-- Set 1 -->
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Tenia dudas sobre mi liquidacion laboral. En menos de 5 minutos me explico exactamente cuanto me correspondia citando los articulos de la LGT."</div><div class="testi-author"><div class="testi-avatar">MC</div><div><div class="testi-name">Maria C.</div><div class="testi-role">Contadora · La Paz</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Lo uso para mis clientes antes de la consultoria formal. Llegan mas informados y aprovechamos mejor el tiempo. El plan Profesional vale cada venezolano."</div><div class="testi-author"><div class="testi-avatar">JR</div><div><div class="testi-name">Dr. Jorge R.</div><div class="testi-role">Abogado · Santa Cruz</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Necesitaba entender el proceso de contratacion con el Estado (SICOES). El asistente me guio paso a paso. Ya no dependemos de intermediarios."</div><div class="testi-author"><div class="testi-avatar">AP</div><div><div class="testi-name">Ana P.</div><div class="testi-role">Gerente PYME · Cochabamba</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Me ayudo con todo el proceso de divorcio. Me explico mis derechos, los plazos y lo que necesitaba preparar. Llegue mucho mas tranquila al juzgado."</div><div class="testi-author"><div class="testi-avatar">LP</div><div><div class="testi-name">Laura P.</div><div class="testi-role">Docente · Oruro</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Registre mi SRL con la guia del asistente. Me explico cada paso en FUNDEMPRESA y todos los requisitos. Ahorre tiempo y dinero en tramites."</div><div class="testi-author"><div class="testi-avatar">RM</div><div><div class="testi-name">Roberto M.</div><div class="testi-role">Empresario · Tarija</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Como estudiante de derecho es invaluable. Puedo consultar articulos especificos y entender su interpretacion practica. Mejor que muchos libros."</div><div class="testi-author"><div class="testi-avatar">CS</div><div><div class="testi-name">Carlos S.</div><div class="testi-role">Estudiante Derecho · UMSA</div></div></div></div>
+      <!-- Set 2 (duplicado para loop continuo) -->
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Tenia dudas sobre mi liquidacion laboral. En menos de 5 minutos me explico exactamente cuanto me correspondia citando los articulos de la LGT."</div><div class="testi-author"><div class="testi-avatar">MC</div><div><div class="testi-name">Maria C.</div><div class="testi-role">Contadora · La Paz</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Lo uso para mis clientes antes de la consultoria formal. Llegan mas informados y aprovechamos mejor el tiempo. El plan Profesional vale cada venezolano."</div><div class="testi-author"><div class="testi-avatar">JR</div><div><div class="testi-name">Dr. Jorge R.</div><div class="testi-role">Abogado · Santa Cruz</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Necesitaba entender el proceso de contratacion con el Estado (SICOES). El asistente me guio paso a paso. Ya no dependemos de intermediarios."</div><div class="testi-author"><div class="testi-avatar">AP</div><div><div class="testi-name">Ana P.</div><div class="testi-role">Gerente PYME · Cochabamba</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Me ayudo con todo el proceso de divorcio. Me explico mis derechos, los plazos y lo que necesitaba preparar. Llegue mucho mas tranquila al juzgado."</div><div class="testi-author"><div class="testi-avatar">LP</div><div><div class="testi-name">Laura P.</div><div class="testi-role">Docente · Oruro</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Registre mi SRL con la guia del asistente. Me explico cada paso en FUNDEMPRESA y todos los requisitos. Ahorre tiempo y dinero en tramites."</div><div class="testi-author"><div class="testi-avatar">RM</div><div><div class="testi-name">Roberto M.</div><div class="testi-role">Empresario · Tarija</div></div></div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Como estudiante de derecho es invaluable. Puedo consultar articulos especificos y entender su interpretacion practica. Mejor que muchos libros."</div><div class="testi-author"><div class="testi-avatar">CS</div><div><div class="testi-name">Carlos S.</div><div class="testi-role">Estudiante Derecho · UMSA</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-bg" id="faq">
+  <div class="container">
+    <div class="section-head centered reveal">
+      <div class="section-label">Preguntas frecuentes</div>
+      <h2 class="section-title">Todo lo que necesitas saber</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal delay-1"><div class="faq-q" onclick="toggleFaq(this)">Lex Fides Abogados reemplaza a un abogado?<div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a">No. Lex Fides Abogados ofrece orientacion informativa y educativa sobre el derecho venezolano. Para casos que requieran representacion, firma de documentos o juicios, recomendamos consultar con un abogado habilitado. Lex Fides Abogados te ayuda a entender la ley y a llegar mejor preparado a esa consulta.</div></div>
+      <div class="faq-item reveal delay-2"><div class="faq-q" onclick="toggleFaq(this)">Que diferencia hay entre los planes?<div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a">El plan Basico da acceso al chat en 3 areas con 50 mensajes al mes. El Profesional desbloquea las 9 areas con hasta 300 mensajes. El Empresarial tiene acceso ilimitado a todas las areas. La Biblioteca Juridica esta disponible en todos los planes sin restriccion.</div></div>
+      <div class="faq-item reveal delay-3"><div class="faq-q" onclick="toggleFaq(this)">Puedo cancelar en cualquier momento?<div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a">Si, puedes cancelar cuando quieras desde tu panel de usuario. El acceso se mantiene hasta el final del periodo pagado. No hay penalidades ni cargos adicionales por cancelacion.</div></div>
+      <div class="faq-item reveal delay-1"><div class="faq-q" onclick="toggleFaq(this)">El asistente conoce la legislacion mas reciente?<div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a">El asistente esta actualizado con la legislacion venezolana vigente hasta su ultimo entrenamiento. Para normas muy recientes recomendamos verificar en la Gaceta Oficial del Republica Bolivariana de Venezuela de Venezuela.</div></div>
+      <div class="faq-item reveal delay-2"><div class="faq-q" onclick="toggleFaq(this)">Mis conversaciones son privadas?<div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a">Si. Las conversaciones son confidenciales y no se comparten con terceros. Los datos se almacenan de forma segura en Firebase (Google) con cifrado en transito y en reposo.</div></div>
+      <div class="faq-item reveal delay-3"><div class="faq-q" onclick="toggleFaq(this)">Hay prueba gratuita?<div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></div><div class="faq-a">Si. Al registrarte obtienes el plan gratuito con 10 mensajes en el area General y acceso completo a la Biblioteca Juridica, sin necesidad de tarjeta de credito.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section reveal">
+  <div class="cta-glow"></div>
+  <h2>Comienza a entender el derecho venezolano hoy</h2>
+  <p>Sin citas, sin esperas. Tu orientacion juridica en segundos.</p>
+  <button class="btn-primary" onclick="window.location.href='index.html'">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    Probar Lex Fides Abogados gratis
+  </button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="nav-logo">
+        <div class="nav-logo-mark"><svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z"/></svg></div>
+        <span class="nav-logo-text">Lex Fides Abogados</span>
+      </div>
+      <p>Asistente juridico con inteligencia artificial especializado en la legislacion del Republica Bolivariana de Venezuela de Venezuela. Disponible 24/7.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Producto</h4>
+      <a href="#caracteristicas">Caracteristicas</a>
+      <a href="#precios">Precios</a>
+      <a href="index.html">Ir al asistente</a>
+      <a href="admin.html">Panel admin</a>
+    </div>
+    <div class="footer-col">
+      <h4>Areas</h4>
+      <a href="index.html">Derecho Laboral</a>
+      <a href="index.html">Derecho Penal</a>
+      <a href="index.html">Derecho Civil</a>
+      <a href="index.html">Derecho Familiar</a>
+      <a href="index.html">Constitucional</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Terminos de uso</a>
+      <a href="#">Politica de privacidad</a>
+      <a href="#">Aviso legal</a>
+      <a href="#">Contacto</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Lex Fides Abogados. Todos los derechos reservados. Orientacion informativa — no constituye asesoramiento legal oficial.</p>
+    <p>Republica Bolivariana de Venezuela de Venezuela</p>
+  </div>
+</footer>
+
+<script>
+// ── NAV scroll effect ──
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// ── Mobile menu ──
+function toggleMobileMenu() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+document.querySelectorAll('#mobile-menu a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('open'));
+});
+
+// ── FAQ ──
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ── Scroll reveal ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+  observer.observe(el);
+});
+
+// ── Animated counters ──
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  const duration = 1800;
+  const step = target / (duration / 16);
+  let current = 0;
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = Math.floor(current);
+    if (current >= target) clearInterval(timer);
+  }, 16);
+}
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      animateCounter(e.target);
+      counterObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+// ── Parallax hero bg ──
+window.addEventListener('scroll', () => {
+  const hero = document.querySelector('.hero-bg');
+  if (hero) {
+    hero.style.transform = `scale(1.05) translateY(${window.scrollY * 0.2}px)`;
+  }
+}, { passive: true });
+</script>
+</body>
+</html>
