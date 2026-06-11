@@ -136,7 +136,7 @@
             </div>
             <ul class="plan-card-feats">
               <li>50 mensajes/mes</li>
-              <li>General &middot; Laboral &middot; Civil</li>
+              <li>General · Laboral · Civil</li>
             </ul>
           </div>
         </div>
@@ -244,7 +244,7 @@
     </div>
     <div class="brand">
       <h1>Lex Fides Abogados</h1>
-      <p>Asistente juridico &middot; República Bolivariana de Venezuela</p>
+      <p>Asistente juridico · República Bolivariana de Venezuela</p>
     </div>
     <button class="user-menu-btn" id="user-menu-btn" onclick="toggleUserMenu()" style="display:none">
       <div class="user-avatar" id="user-avatar">?</div>
@@ -441,15 +441,17 @@ Esta orientacion es de caracter informativo y no sustituye el asesoramiento de u
 
   <!-- Footer -->
   <div id="footer-bar">
-    <p>Orientacion informativa &middot; No constituye asesoramiento legal oficial &middot; Consulte siempre con un abogado habilitado</p>
+    <p>Orientacion informativa · No constituye asesoramiento legal oficial · Consulte siempre con un abogado habilitado</p>
   </div>
 
 </div>
 
 <script src="biblioteca.js"></script>
 <script type="module">
+// URL del backend
 const BACKEND_URL = 'https://lexbolivia-backend.onrender.com';
 
+// ── Firebase Auth (cliente) ──
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut as fbSignOut, updateProfile, GoogleAuthProvider, signInWithPopup } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js';
 import { getFirestore, doc, onSnapshot, setDoc, collection, query, orderBy, limit, addDoc, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js';
@@ -519,12 +521,13 @@ const AREAS = {
   }
 };
 
-const MAX_HISTORY_PAIRS = 10;
+const MAX_HISTORY_PAIRS = 10; // maximo 10 intercambios antes de recortar
 let currentArea = 'general';
 let history = [];
 let panelOpen = false;
 let historyPanelOpen = false;
 
+// ── LocalStorage historial ──
 const MAX_SAVED_CONVS = 5;
 
 function getSavedConversations() {
@@ -627,6 +630,9 @@ const overlay = document.getElementById('overlay');
 document.getElementById('welcome-ts').textContent = now();
 
 
+// ══════════════════════════════════════════════════════
+//  BIBLIOTECA — Logica
+// ══════════════════════════════════════════════════════
 let libInitialized = false;
 let libCurrentCat  = 'todos';
 let libSearchQuery = '';
@@ -693,17 +699,17 @@ function libSelectItem(id) {
     </div>`).join('');
 
   const tagsHtml = norma.tags.map(t =>
-    `<span class="lib-tag" onclick="consultarEnChat('${t.replace(/'/g,"\\'")  }', '${norma.nombre.replace(/'/g,"\\'") }' )">${t}</span>`
+    `<span class="lib-tag" onclick="consultarEnChat('${t.replace(/'/g,"\\'")}', '${norma.nombre.replace(/'/g,"\\'")}' )">${t}</span>`
   ).join('');
 
   document.getElementById('lib-detail').innerHTML = `
     <div class="lib-detail-header">
-      <div class="lib-detail-law">${norma.ley} &middot; ${norma.anio}</div>
+      <div class="lib-detail-law">${norma.ley} · ${norma.anio}</div>
       <div class="lib-detail-title">${norma.nombre}</div>
       <div class="lib-detail-meta">
         <span>${norma.organismo}</span>
       </div>
-      <button class="lib-ask-btn" onclick="consultarEnChat('${norma.nombre.replace(/'/g,"\\'") }', '')">
+      <button class="lib-ask-btn" onclick="consultarEnChat('${norma.nombre.replace(/'/g,"\\'")}', '')">
         <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         Consultar al asistente
       </button>
@@ -740,6 +746,9 @@ function consultarEnChat(tema, norma) {
   inputEl.focus();
 }
 
+// ══════════════════════════════════════════════════════
+//  MODAL DE PLANES
+// ══════════════════════════════════════════════════════
 const PLAN_PRICES_MODAL = { basico: 35, profesional: 60, empresarial: 75 };
 const PLAN_NAMES_MODAL  = { basico: 'Basico', profesional: 'Profesional', empresarial: 'Empresarial' };
 let selectedPlanModal = null;
@@ -752,6 +761,7 @@ function openPlansModal() {
     const lim = userPlanData.limit === Infinity ? '∞' : userPlanData.limit;
     document.getElementById('pm-current-msgs').textContent = `${userPlanData.messagesUsed} / ${lim} mensajes`;
   }
+  // Codigo de referencia unico por usuario
   const refCode = 'LEX-' + (currentUser?.uid?.slice(0,6) || '000000').toUpperCase();
   document.getElementById('pm-referencia').textContent = refCode;
   selectedPlanModal = null;
@@ -806,12 +816,14 @@ async function submitPlanRequest() {
   }
 }
 
+// Toggle Chat / Biblioteca
 document.addEventListener('click', e => {
   const btn = e.target.closest('#vt-chat, #vt-lib');
   if (!btn) return;
   switchView(btn.id === 'vt-lib' ? 'lib' : 'chat');
 });
 
+// Expose module-scoped functions to global scope for HTML onclick attributes
 window.authSubmit = authSubmit;
 window.signInWithGoogle = signInWithGoogle;
 window.showAuthTab = showAuthTab;
@@ -839,3 +851,4 @@ window.selectPayMethod = selectPayMethod;
 window.submitPlanRequest = submitPlanRequest;
 </script>
 </body>
+</html>
